@@ -8,6 +8,7 @@ body {
     background-image: url('coffee_backg.png');
     background-size: cover;
     background-attachment: fixed;
+    min-height: 1000px;
 }
 
 /* Header and Navigation */
