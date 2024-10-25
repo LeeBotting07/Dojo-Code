@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bean and Brew - Upcoming Events</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/events">Events</a></li>
+                <li><a href="/about_us">About Us</a></li>
+                <li><a href="/contact_us">Contact</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </nav>
+        <h1>Upcoming Events</h1>
+        <p>Join us for our exciting events!</p>
+    </header>
+    
+    <main>
+        <section class="gallery">
+            <h2>Event Highlights</h2>
+            <div class="image-grid">
+                <img src="event1.jpg" alt="Event 1">
+                <img src="event2.jpg" alt="Event 2">
+                <img src="event3.jpg" alt="Event 3">
+                <img src="event4.jpg" alt="Event 4">
+            </div>
+        </section>
+
+        <section class="booking">
+            <h2>Book Your Spot</h2>
+            <form id="booking-form">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="event">Select Event:</label>
+                <select id="event" name="event" required>
+                    <option value="">--Please choose an event--</option>
+                    <option value="event1">Event 1</option>
+                    <option value="event2">Event 2</option>
+                    <option value="event3">Event 3</option>
+                </select>
+
+                <button type="submit" class="book-button">Go to Booking Page</button>
+            </form>
+        </section>
+
+        <section class="manage-booking">
+            <h2>Manage Your Booking</h2>
+            <p>If you have booked an event and wish to cancel, or if an event is full, you can join the waiting queue below.</p>
+            <form id="cancel-booking-form">
+                <label for="cancel-event">Select Event to Cancel:</label>
+                <select id="cancel-event" name="cancel-event">
+                    <option value="">--Please choose an event--</option>
+                    <option value="event1">Event 1</option>
+                    <option value="event2">Event 2</option>
+                    <option value="event3">Event 3</option>
+                </select>
+                <button type="submit" class="book-button">Cancel Booking</button>
+            </form>
+
+            <form id="waiting-list-form">
+                <label for="waiting-event">Join Waiting Queue:</label>
+                <select id="waiting-event" name="waiting-event" required>
+                    <option value="">--Please choose an event--</option>
+                    <option value="event1">Event 1</option>
+                    <option value="event2">Event 2</option>
+                    <option value="event3">Event 3</option>
+                </select>
+                <button type="submit" class="book-button">Join Waiting Queue</button>
+            </form>
+        </section>
+
+        <section class="upcoming-events">
+            <h2>Upcoming Events</h2>
+            <ul>
+                <li class="event-item">Event 1 - Date: January 15, 2024</li>
+                <li class="event-item">Event 2 - Date: February 10, 2024</li>
+                <li class="event-item">Event 3 - Date: March 5, 2024</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/static/images/logo.png" alt="Company Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-social-media">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><img src="/static/images/facebook.png" alt="Facebook"></a>
+                    <a href="#" aria-label="Twitter"><img src="/static/images/twitter.png" alt="Twitter" class="social-icon"></a>
+                    <a href="#" aria-label="Instagram"><img src="/static/images/instagram.png" alt="Instagram" class="social-icon"></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 The Dojo Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
