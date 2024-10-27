@@ -1,106 +1,51 @@
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 20px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Selection - The Dojo</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/events">Events</a></li>
+                <li><a href="/about_us">About Us</a></li>
+                <li><a href="/contact_us">Contact</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
 
-.login-options {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-}
+    <main class="login-selection">
+        <div class="login-container">
+            <h1>Welcome to The Dojo</h1>
+            <p>Please select your login type:</p>
+            
+            <div class="login-options">
+                <a href="/customer-login" class="login-option customer">
+                    <i class="fas fa-user"></i>
+                    <h2>Customer Login</h2>
+                    <p>Access your personal account</p>
+                </a>
+                
+                <a href="/admin-login" class="login-option admin">
+                    <i class="fas fa-user-shield"></i>
+                    <h2>Admin Login</h2>
+                    <p>Staff and administrator access</p>
+                </a>
+            </div>
+            
+            <div class="additional-links">
+                <a href="/register">New user? Register here</a>
+                <a href="/forgot-password">Forgot password?</a>
+            </div>
+        </div>
+    </main>
 
-.login-options h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-}
-
-.login-buttons {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 30px;
-}
-
-.login-type-btn {
-    padding: 12px 24px;
-    background-color: #854d82;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.login-type-btn:hover {
-    background-color: #ff70d4;
-    transform: scale(1.05);
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.login-form h3 {
-    text-align: center;
-    color: #333;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.form-group label {
-    color: #333;
-    font-weight: bold;
-}
-
-.form-group input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.submit-btn {
-    padding: 12px;
-    background-color: #854d82;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-.submit-btn:hover {
-    background-color: #ff70d4;
-}
-
-.register-link {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.register-link a {
-    color: #854d82;
-    text-decoration: none;
-}
-
-.register-link a:hover {
-    text-decoration: underline;
-}
-
-.hidden {
-    display: none;
-}
+    <!-- Include your existing footer here -->
+</body>
+</html>
