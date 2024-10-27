@@ -23,6 +23,18 @@ def contact():
 def login():
     return render_template('login.html')
 
+@app.route('/customer-login')
+def customer_login():
+    return render_template('customer-login.html')
+
+@app.route('/admin-login')
+def admin_login():
+    return render_template('admin-login.html')
+
+@app.route('/forgot-password')
+def forgot_password():
+    return render_template('forgot-password.html')
+
 @app.route('/register')
 def register():
     return render_template('register.html')

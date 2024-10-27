@@ -10,7 +10,13 @@
 <body>
     <header>
         <nav>
-            <!-- Your existing navigation -->
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/events">Events</a></li>
+                <li><a href="/about_us">About Us</a></li>
+                <li><a href="/contact_us">Contact</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
         </nav>
     </header>
 
@@ -43,5 +49,48 @@
             </form>
         </div>
     </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/static/images/logo.png" alt="Company Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-social-media">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><img src="/static/images/facebook.png" alt="Facebook"></a>
+                    <a href="#" aria-label="Twitter"><img src="/static/images/twitter.png" alt="Twitter" class="social-icon"></a>
+                    <a href="#" aria-label="Instagram"><img src="/static/images/instagram.png" alt="Instagram" class="social-icon"></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 The Dojo Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.querySelector('.password-toggle');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.textContent = 'Show';
+            }
+        }
+    </script>
 </body>
 </html>
