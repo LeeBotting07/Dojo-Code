@@ -18,7 +18,6 @@
                 <li><a href="/login">Login</a></li>
             </ul>
         </nav>
-
     </header>
 
     <main class="login-page admin">
@@ -27,18 +26,18 @@
             <form class="login-form" action="/admin-login" method="POST">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                    <span class="password-toggle" onclick="togglePassword()">Show</span>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <span class="password-toggle" onclick="togglePassword()"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="security-code">Security Code</label>
-                    <input type="password" id="security-code" name="security-code" required>
+                    <input type="password" id="security-code" name="security-code" required placeholder="Enter security code">
                 </div>
 
                 <button type="submit" class="login-button">Login</button>
