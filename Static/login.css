@@ -7,7 +7,7 @@ body {
 }
 
 /* Centering the Login Page */
-.login-page {
+.login-selection {
     min-height: 100vh; /* Full height */
     display: flex;
     justify-content: center;
@@ -15,8 +15,8 @@ body {
     padding: 2rem;
 }
 
-/* Login Form Container */
-.login-form-container {
+/* Login Container */
+.login-container {
     background: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
     padding: 2rem;
     border-radius: 10px; /* Rounded corners */
@@ -26,53 +26,55 @@ body {
     text-align: center; /* Center text */
 }
 
-/* Input Fields */
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    width: 100%; /* Full width */
-    padding: 10px; /* Padding for comfort */
-    margin: 10px 0; /* Space between inputs */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    transition: border-color 0.3s; /* Smooth transition */
-}
-
-/* Focus Effect */
-input:focus {
-    border-color: #854d82; /* Change border color on focus */
-    outline: none; /* Remove default outline */
-}
-
-/* Submit Button */
-button {
-    background-color: #854d82; /* Primary color */
-    color: white; /* Text color */
-    padding: 10px 15px; /* Padding */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor */
-    transition: background-color 0.3s; /* Smooth transition */
-}
-
-/* Button Hover Effect */
-button:hover {
-    background-color: #6a3e6b; /* Darker shade on hover */
-}
-
 /* Title Styles */
 h1 {
     color: #333; /* Dark text for contrast */
     margin-bottom: 1rem; /* Space below title */
 }
 
-/* Link Styles */
-a {
-    color: #854d82; /* Link color */
-    text-decoration: none; /* Remove underline */
+/* Instructions Paragraph */
+p {
+    color: #666; /* Lighter text for instructions */
+    margin-bottom: 1.5rem; /* Space below paragraph */
 }
 
-a:hover {
+/* Login Options */
+.login-options {
+    display: flex; /* Flexbox for layout */
+    flex-direction: column; /* Stack options vertically */
+    gap: 1rem; /* Space between options */
+}
+
+/* Login Option Links */
+.login-option {
+    background-color: #854d82; /* Background color for login options */
+    color: white; /* Text color */
+    padding: 1rem; /* Padding for comfort */
+    border-radius: 8px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+/* Login Option Hover Effect */
+.login-option:hover {
+    background-color: #6a3e6b; /* Darker shade on hover */
+}
+
+/* Additional Links */
+.additional-links {
+    margin-top: 1.5rem; /* Space above additional links */
+}
+
+/* Additional Link Styles */
+.additional-links a {
+    color: #854d82; /* Link color */
+    text-decoration: none; /* Remove underline */
+    margin: 0.5rem 0; /* Space between links */
+    display: block; /* Block display for links */
+}
+
+/* Additional Link Hover Effect */
+.additional-links a:hover {
     text-decoration: underline; /* Underline on hover */
 }
 
@@ -81,4 +83,40 @@ a:hover {
     text-align: center;
     padding: 1rem;
     background-color: #f4f4f4;
+}
+
+.footer-logo img {
+    max-width: 100px; /* Limit logo size */
+}
+
+.footer-links {
+    margin-top: 1rem; /* Space above footer links */
+}
+
+.footer-links h4 {
+    margin-bottom: 0.5rem; /* Space below heading */
+}
+
+.footer-links ul {
+    list-style: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+}
+
+.footer-links li {
+    margin: 0.5rem 0; /* Space between footer links */
+}
+
+.footer-social-media {
+    margin-top: 1rem; /* Space above social media links */
+}
+
+.social-icons a {
+    margin: 0 5px; /* Space between social icons */
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    margin-top: 1rem; /* Space above footer text */
+    font-size: 0.9em; /* Smaller font size */
+    color: #666; /* Lighter text color */
 }
