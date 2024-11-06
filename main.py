@@ -1,3 +1,4 @@
+import sqlite3    #Our database
 from flask import Flask, render_template
  
 app = Flask(__name__)
