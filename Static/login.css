@@ -1,122 +1,266 @@
-/* General Body Styles */
+/* General Styles for the Login Page */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4; /* Light background for contrast */
+    background: linear-gradient(to right, #f7f7f7, #e0e0e0); /* Gradient background */
     margin: 0;
     padding: 0;
 }
 
-/* Centering the Login Page */
-.login-selection {
-    min-height: 100vh; /* Full height */
+/* Centered Login Page */
+.login-page {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem;
 }
 
-/* Login Container */
-.login-container {
-    background: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
-    padding: 2rem;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    max-width: 400px; /* Maximum width */
-    width: 100%; /* Full width on smaller screens */
-    text-align: center; /* Center text */
-}
-
-/* Title Styles */
-h1 {
-    color: #333; /* Dark text for contrast */
-    margin-bottom: 1rem; /* Space below title */
-}
-
-/* Instructions Paragraph */
-p {
-    color: #666; /* Lighter text for instructions */
-    margin-bottom: 1.5rem; /* Space below paragraph */
-}
-
-/* Login Options */
-.login-options {
-    display: flex; /* Flexbox for layout */
-    flex-direction: column; /* Stack options vertically */
-    gap: 1rem; /* Space between options */
-}
-
-/* Login Option Links */
-.login-option {
-    background-color: #854d82; /* Background color for login options */
-    color: white; /* Text color */
-    padding: 1rem; /* Padding for comfort */
-    border-radius: 8px; /* Rounded corners */
-    text-decoration: none; /* Remove underline */
-    transition: background-color 0.3s; /* Smooth transition */
-}
-
-/* Login Option Hover Effect */
-.login-option:hover {
-    background-color: #6a3e6b; /* Darker shade on hover */
-}
-
-/* Additional Links */
-.additional-links {
-    margin-top: 1.5rem; /* Space above additional links */
-}
-
-/* Additional Link Styles */
-.additional-links a {
-    color: #854d82; /* Link color */
-    text-decoration: none; /* Remove underline */
-    margin: 0.5rem 0; /* Space between links */
-    display: block; /* Block display for links */
-}
-
-/* Additional Link Hover Effect */
-.additional-links a:hover {
-    text-decoration: underline; /* Underline on hover */
-}
-
-/* Footer Styles */
-.footer-content {
+/* General Form Container */
+.login-form-container {
+    background: #fff;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 380px;
     text-align: center;
+}
+
+/* Form Title */
+h1 {
+    color: #6a3e6b;
+    margin-bottom: 1.5rem;
+}
+
+/* Input Fields */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="checkbox"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Password visibility toggle */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 40px;
+    cursor: pointer;
+}
+
+/* Button Styles */
+.login-button {
+    background-color: #6a3e6b;
+    color: white;
     padding: 1rem;
-    background-color: #f4f4f4;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #854d82;
+}
+
+/* Form Links */
+.form-links a {
+    color: #6a3e6b;
+    text-decoration: none;
+    display: block;
+    margin-top: 1rem;
+}
+
+.form-links a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Section */
+footer {
+    background-color: solid;
+    padding: 2rem;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .footer-logo img {
-    max-width: 100px; /* Limit logo size */
+    max-width: 100px;
 }
 
 .footer-links {
-    margin-top: 1rem; /* Space above footer links */
+    margin-top: 1rem;
 }
 
 .footer-links h4 {
-    margin-bottom: 0.5rem; /* Space below heading */
+    font-size: 1.2rem;
 }
 
 .footer-links ul {
-    list-style: none; /* Remove bullet points */
-    padding: 0; /* Remove padding */
+    list-style: none;
+    padding: 0;
 }
 
 .footer-links li {
-    margin: 0.5rem 0; /* Space between footer links */
+    margin: 0.5rem 0;
 }
 
 .footer-social-media {
-    margin-top: 1rem; /* Space above social media links */
+    margin-top: 1rem;
 }
 
-.social-icons a {
-    margin: 0 5px; /* Space between social icons */
+.footer-social-media a {
+    margin: 0 10px;
 }
 
-/* Footer Bottom */
 .footer-bottom {
-    margin-top: 1rem; /* Space above footer text */
-    font-size: 0.9em; /* Smaller font size */
-    color: #666; /* Lighter text color */
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .login-form-container {
+        padding: 2rem;
+    }
+
+    .login-button {
+        font-size: 1rem;
+    }
+
+    .footer-logo img {
+        max-width: 80px;
+    }
+}
+
+/*-----------------------------------------------*/
+/* Customer Login Styles                         */
+/*-----------------------------------------------*/
+
+.customer .login-form-container {
+    background: #fff;
+    padding: 2.5rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.customer .login-button {
+    background-color: #6a3e6b; /* Purple */
+}
+
+.customer .login-button:hover {
+    background-color: #854d82; /* Darker purple */
+}
+
+/*-----------------------------------------------*/
+/* Admin Login Styles                            */
+/*-----------------------------------------------*/
+
+.admin .login-form-container {
+    background: #f4f4f9; /* Light grey background */
+    padding: 2.5rem 3rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.admin .login-button {
+    background-color: #444; /* Dark gray */
+}
+
+.admin .login-button:hover {
+    background-color: #333; /* Darker gray */
+}
+
+/*-----------------------------------------------*/
+/* Login Selection Options (Customer/Admin)      */
+/*-----------------------------------------------*/
+
+.login-selection {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.login-option {
+    background-color: #854d82; /* Purple */
+    color: white;
+    width: 45%; /* Box width */
+    padding: 2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: transform 0.3s, background-color 0.3s; /* Smooth hover transitions */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-option:hover {
+    transform: scale(1.05); /* Zoom effect */
+    background-color: #6a3e6b; /* Darker shade of purple */
+}
+
+.login-option .icon-container {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.login-option h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.login-option p {
+    font-size: 1rem;
+}
+
+.additional-links {
+    margin-top: 2rem;
+}
+
+.additional-links a {
+    color: #854d82;
+    text-decoration: none;
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.additional-links a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Layout for Login Options */
+@media (max-width: 768px) {
+    .login-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login-option {
+        width: 80%;
+        margin-bottom: 2rem;
+    }
 }

@@ -22,31 +22,72 @@
 
     <main class="login-page admin">
         <div class="login-form-container">
-            <h1>Administrator Login</h1>
+            <h1>Admin Login</h1>
             <form class="login-form" action="/admin-login" method="POST">
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required placeholder="Enter your password">
                     <span class="password-toggle" onclick="togglePassword()"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="security-code">Security Code</label>
-                    <input type="password" id="security-code" name="security-code" required placeholder="Enter security code">
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
                 </div>
 
                 <button type="submit" class="login-button">Login</button>
-                
+
                 <div class="form-links">
-                    <a href="/admin-support">Need Help?</a>
+                    <a href="/forgot-password">Forgot Password?</a>
+                    <a href="/register">Create Account</a>
                 </div>
             </form>
         </div>
     </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/static/images/logo.png" alt="Company Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-social-media">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><img src="/static/images/facebook.png" alt="Facebook"></a>
+                    <a href="#" aria-label="Twitter"><img src="/static/images/twitter.png" alt="Twitter" class="social-icon"></a>
+                    <a href="#" aria-label="Instagram"><img src="/static/images/instagram.png" alt="Instagram" class="social-icon"></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 The Dojo Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+    </script>
 </body>
 </html>
