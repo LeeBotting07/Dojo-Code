@@ -159,11 +159,11 @@ footer {
 }
 
 .customer .login-button {
-    background-color: #6a3e6b; /* Purple */
+    background-color: #6a3e6b; 
 }
 
 .customer .login-button:hover {
-    background-color: #854d82; /* Darker purple */
+    background-color: #854d82; 
 }
 
 /*-----------------------------------------------*/
@@ -171,7 +171,7 @@ footer {
 /*-----------------------------------------------*/
 
 .admin .login-form-container {
-    background: #f4f4f9; /* Light grey background */
+    background: #f4f4f9; 
     padding: 2.5rem 3rem;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -179,11 +179,11 @@ footer {
 }
 
 .admin .login-button {
-    background-color: #444; /* Dark gray */
+    background-color: #444; 
 }
 
 .admin .login-button:hover {
-    background-color: #333; /* Darker gray */
+    background-color: #333; 
 }
 
 /*-----------------------------------------------*/
@@ -207,20 +207,20 @@ footer {
 }
 
 .login-option {
-    background-color: #854d82; /* Purple */
+    background-color: #854d82; 
     color: white;
-    width: 45%; /* Box width */
+    width: 45%; 
     padding: 2rem;
     border-radius: 10px;
     text-decoration: none;
-    transition: transform 0.3s, background-color 0.3s; /* Smooth hover transitions */
+    transition: transform 0.3s, background-color 0.3s;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 .login-option:hover {
-    transform: scale(1.05); /* Zoom effect */
-    background-color: #6a3e6b; /* Darker shade of purple */
+    transform: scale(1.05); 
+    background-color: #6a3e6b; 
 }
 
 .login-option .icon-container {
