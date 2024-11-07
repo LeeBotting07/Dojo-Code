@@ -3,6 +3,12 @@ from flask import Flask, render_template
  
 app = Flask(__name__)
 
+connection = sqlite3.connect('dojo.db', check_same_thread=False)
+
+cursor = connection.cursor()
+cursor.execute("CREATE TABLE IF NOT EXISTS users (name TEXT, email TEXT, password TEXT)")
+cursor.close()
+
 @app.route('/')
 @app.route('/home')
 def home():
