@@ -11,9 +11,9 @@ lastName = "test"
 phoneNumber = "0123456789"
 address = "test"
 
-with sqlite3.connect("dojoproject.db") as con:
+with sqlite3.connect("dojo.db") as con:
     cur = con.cursor()
-    cur.execute("INSERT INTO accountInfo (username, email, password, firstName, lastName, phoneNumber, address) VALUES (?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, address) VALUES (?,?,?,?,?,?,?)",
                 (username, email , hashed_password, firstName, lastName, phoneNumber, address))
             
 
