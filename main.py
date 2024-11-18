@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import sqlite3
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'this_is_a_very_secret_key'
 
@@ -68,6 +69,13 @@ def contact():
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
+    return render_template('login.html')
+
+# Customer Login route
+@app.route('/customer-login')
+def customer_login():
+
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -84,11 +92,7 @@ def login():
         else:
             flash('Invalid email or password.')
 
-    return render_template('login.html')
 
-# Customer Login route
-@app.route('/customer-login')
-def customer_login():
     return render_template('customer-login.html')
 
 # Admin Login route
