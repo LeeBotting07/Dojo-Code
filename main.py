@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 from flask_bcrypt import Bcrypt
+import datetime
 
 app = Flask(__name__)
 app.secret_key = 'password'
@@ -8,8 +9,9 @@ bcrypt = Bcrypt(app)
 
 # Routes
 @app.route('/')
+@app.route('/home')
 def home():
-    return render_template('main.html', title="Home")
+    return render_template('index.html', title="Home")
 
 @app.route('/products')
 def products():
@@ -39,8 +41,8 @@ def customer_login():
                 cur.execute("SELECT password FROM users WHERE email = ?", (email,))
                 data = cur.fetchone()
                 if data and bcrypt.check_password_hash(data[0], password):
-                    print("Logged in")
-                    return redirect(url_for('home'))
+                    session['email'] = email
+                    return redirect(url_for('account'))
                 else:
                     error = "Invalid username or password"
         except sqlite3.Error as e:
@@ -58,6 +60,45 @@ def forgot_password():
 @app.route('/events')
 def events():
     return render_template('events.html', title="Events")
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    if request.method == 'POST':
+        firstname = request.form.get('firstname')
+        lastname = request.form.get('lastname')
+        phone = request.form.get('phone')
+        address = request.form.get('address')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        current_time = datetime.datetime.now()
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (username, email, hashed_password, firstname, lastname, phone, address, current_time))
+                con.commit()
+                session['email'] = email
+                return redirect(url_for('account'))
+                
+
+        except sqlite3.Error as e:
+            error = f"Database error: {e}"
+    return render_template('register.html', title="Register", error=error)
+
+@app.route('/404')
+def error_404():
+    return render_template('404.html', title="404")
+
+@app.route('/account')
+def account():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    
+    email = session['email']
+    
+    return render_template('account.html', title="Account", email=email)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -39,7 +39,9 @@ h1 {
 
 input[type="email"],
 input[type="password"],
-input[type="checkbox"] {
+input[type="checkbox"],
+input[type="text"],
+input[type="tel"] {
     width: 100%;
     padding: 0.8rem;
     margin-top: 0.5rem;

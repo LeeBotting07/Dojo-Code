@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required placeholder="Enter your password">
-                    <span class="password-toggle" onclick="togglePassword()"></span>
+                    <h6 style="text-align: left;" onclick="togglePassword()">Show Password</h6>
                 </div>
 
                 <div class="form-group remember-me">
@@ -46,6 +46,9 @@
                     <a href="/forgot-password">Forgot Password?</a>
                     <a href="/register">Create Account</a>
                 </div>
+                {% if error %}
+                <p>{{ error }}</p>
+                {% endif %}
             </form>
         </div>
     </main>

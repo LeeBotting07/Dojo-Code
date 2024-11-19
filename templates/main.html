@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - The Dojo</title>
+    <title>The Dojo</title>
     <link rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/login.css">
+
 </head>
 <body>
     <header>
@@ -18,12 +19,8 @@
                 <li><a href="/login">Login</a></li>
             </ul>
         </nav>
-        <div class="hero">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo name" class="logo">
-            <h1>Welcome to Dojo</h1>
-            <p>Discover the best coding website you've ever laid your eyes on.</p>
-            <a href="{{ url_for('events') }}" class="hero-btn">View Events</a>
-        </div>
+    {% block header %}
+    {% endblock %}
     </header>
     <main>
         {% block content %}
@@ -41,6 +38,7 @@
                     <li><a href="{{ url_for('events') }}">Events</a></li>
                     <li><a href="{{ url_for('contact') }}">Contact</a></li>
                     <li><a href="#">Privacy Policy</a></li>
+  
                 </ul>
             </div>
             <div class="footer-social-media">

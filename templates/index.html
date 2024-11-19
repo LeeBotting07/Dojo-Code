@@ -1,0 +1,8 @@
+{% extends "main.html" %}
+{% block header %}
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo name" class="logo">
+    <h1>Welcome to Dojo</h1>
+    <p>Discover the best coding website you've ever laid your eyes on.</p>
+    <a href="{{ url_for('events') }}" class="hero-btn">View Events</a>
+</div>
+{% endblock %}

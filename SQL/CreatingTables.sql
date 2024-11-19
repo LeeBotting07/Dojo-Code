@@ -1,4 +1,7 @@
 -- Users Table
+
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     userID INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
