@@ -97,6 +97,18 @@ def account():
         return redirect(url_for('login'))
     
     email = session['email']
+    try:
+        with sqlite3.connect("dojo.db") as con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (username, email, hashed_password, firstname, lastname, phone, address, current_time))
+            con.commit()
+            session['email'] = email
+            return redirect(url_for('account'))
+            
+
+    except sqlite3.Error as e:
+        error = f"Database error: {e}"
+    
     
     return render_template('account.html', title="Account", email=email)
 
