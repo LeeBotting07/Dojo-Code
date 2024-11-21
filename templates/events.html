@@ -35,8 +35,9 @@
         <section class="booking">
             <h2>Book Your Spot</h2>
             <form id="booking-form" method="post" action="/events">
+                <label type="hidden" value="booking-form" name="form_id"></label>
                 <label for="name">Your Name:</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" placeholder="Name" required>
 
                 <label for="email">Your Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -69,6 +70,7 @@
             </form>
 
             <form id="waiting-list-form">
+                <label type="hidden" value="waiting-list-form" name="form_id"></label>
                 <label for="waiting-event">Join Waiting Queue:</label>
                 <select id="waiting-event" name="waiting-event" required>
                     <option value="">--Please choose an event--</option>

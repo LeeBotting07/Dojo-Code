@@ -63,22 +63,40 @@ def events():
         name = request.form.get('name')
         email = request.form.get('email')
         event = request.form.get('event')
-
-        try:
-            with sqlite3.connect("dojo.db") as con:
-                quote = "SELECT * FROM users WHERE email = ?"
-                cur = con.cursor()
-                cur.execute((quote), (email))
-                email = cur.fetchone()
-                if email:
-                    #put main code here
-                    con.close()
-                else:
-                    return redirect('/404')
-        except sqlite3.Error as e:
-            error = f"Database error: {e}"
-        finally:
-            return render_template('events.html', title="Events")
+        form_id = request.form.get('form_id')
+        if form_id == 'booking-form':
+            try:
+                with sqlite3.connect("dojo.db") as con:
+                    quote = "SELECT id FROM users WHERE email = ?"
+                    cur = con.cursor()
+                    cur.execute((quote), (email))
+                    email = cur.fetchone()
+                    if email:
+                        quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
+                        if event == 'event1':
+                            eventID = 1
+                        elif event == 'event2':
+                            eventID = 2
+                        elif event == 'event3':
+                            eventID = 3
+                        else:
+                            eventID = 4
+                        eventTime = datetime.datetime.now()
+                        eventTime = eventTime.strftime("%x")
+                        data = (email[0], eventID, eventTime)
+                        cur.execute((quote), (data))
+                        con.commit()
+                        con.close()
+                        return render_template('events.html', title="Events")
+                    else:
+                        return redirect('/404')
+            except sqlite3.Error as e:
+                error = f"Database error: {e}"
+            finally:
+                return render_template('events.html', title="Events")
+        elif form_id == 'waiting-list-form':
+            #put main code here
+            [...]
     else:
         return render_template('events.html', title="Events")
 
