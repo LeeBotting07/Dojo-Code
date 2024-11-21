@@ -61,7 +61,6 @@ CREATE TABLE bookings (
     userID INTEGER NOT NULL,
     eventID INTEGER NOT NULL,
     booking_date TIMESTAMP,
-    status TEXT,
     FOREIGN KEY (userID) REFERENCES users(userID),
     FOREIGN KEY (eventID) REFERENCES events(eventID)
 );
@@ -119,3 +118,5 @@ CREATE TABLE coding_lessons (
     FOREIGN KEY (userID) REFERENCES users(userID),
     FOREIGN KEY (instructorID) REFERENCES instructors(instructorID)
 );
+
+ALTER TABLE bookings DROP COLUMN status

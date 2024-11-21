@@ -57,9 +57,32 @@ def admin_login():
 def forgot_password():
     return render_template('forgot-password.html', title="Forgot Password")
 
-@app.route('/events')
+@app.route('/events', methods=['GET', 'POST'])
 def events():
-    return render_template('events.html', title="Events")
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        event = request.form.get('event')
+
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                quote = "SELECT * FROM users WHERE email = ?"
+                cur = con.cursor()
+                cur.execute((quote), (email))
+                email = cur.fetchone()
+                if email:
+                    #put main code here
+                    con.close()
+                else:
+                    return redirect('/404')
+        except sqlite3.Error as e:
+            error = f"Database error: {e}"
+        finally:
+            return render_template('events.html', title="Events")
+    else:
+        return render_template('events.html', title="Events")
+
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
