@@ -56,11 +56,12 @@ CREATE TABLE events (
 );
 
 -- Bookings Table
+DROP TABLE IF EXISTS bookings;
 CREATE TABLE bookings (
     bookingID INTEGER PRIMARY KEY AUTOINCREMENT,
     userID INTEGER NOT NULL,
     eventID INTEGER NOT NULL,
-    booking_date TIMESTAMP,
+    booking_date TEXT NOT NULL,
     FOREIGN KEY (userID) REFERENCES users(userID),
     FOREIGN KEY (eventID) REFERENCES events(eventID)
 );

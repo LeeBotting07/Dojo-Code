@@ -60,7 +60,6 @@ def forgot_password():
 @app.route('/events', methods=['GET', 'POST'])
 def events():
     if request.method == 'POST':
-        name = request.form.get('name')
         email = request.form.get('email')
         event = request.form.get('event')
         form_id = request.form.get('form_id')
@@ -69,7 +68,7 @@ def events():
                 with sqlite3.connect("dojo.db") as con:
                     quote = "SELECT id FROM users WHERE email = ?"
                     cur = con.cursor()
-                    cur.execute((quote), (email))
+                    cur.execute(quote, (email))
                     email = cur.fetchone()
                     if email:
                         quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
@@ -82,7 +81,7 @@ def events():
                         else:
                             eventID = 4
                         eventTime = datetime.datetime.now()
-                        eventTime = eventTime.strftime("%x")
+                        eventTime = eventTime.strftime("%Y-%m-%d %H:%M:%S")
                         data = (email[0], eventID, eventTime)
                         cur.execute((quote), (data))
                         con.commit()
@@ -91,12 +90,10 @@ def events():
                     else:
                         return redirect('/404')
             except sqlite3.Error as e:
-                error = f"Database error: {e}"
-            finally:
-                return render_template('events.html', title="Events")
+                return render_template('events.html', title="Events", error=f"Database error: {e}")
         elif form_id == 'waiting-list-form':
             #put main code here
-            [...]
+            return render_template('events.html', title="Events")
     else:
         return render_template('events.html', title="Events")
 
