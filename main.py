@@ -88,7 +88,7 @@ def events():
                         con.close()
                         return render_template('events.html', title="Events")
                     else:
-                        return redirect('/404')
+                        return redirect('/events')
             except sqlite3.Error as e:
                 return render_template('events.html', title="Events", error=f"Database error: {e}")
         elif form_id == 'waiting-list-form':
@@ -96,6 +96,7 @@ def events():
             return render_template('events.html', title="Events")
     else:
         return render_template('events.html', title="Events")
+
 
 
 
@@ -125,8 +126,8 @@ def register():
             error = f"Database error: {e}"
     return render_template('register.html', title="Register", error=error)
 
-@app.route('/404')
-def error_404():
+@app.errorhandler(404)
+def error_404(error):
     return render_template('404.html', title="404")
 
 @app.route('/account')
