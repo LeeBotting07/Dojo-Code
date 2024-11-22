@@ -94,6 +94,8 @@ def events():
         elif form_id == 'waiting-list-form':
             #put main code here
             return render_template('events.html', title="Events")
+        else:
+            return render_template('events.html', title="Events")
     else:
         return render_template('events.html', title="Events")
 
@@ -127,7 +129,7 @@ def register():
     return render_template('register.html', title="Register", error=error)
 
 @app.errorhandler(404)
-def error_404(error):
+def error_404(error):   
     return render_template('404.html', title="404")
 
 @app.route('/account')
@@ -136,8 +138,28 @@ def account():
         return redirect(url_for('login'))
     
     email = session['email']
+
+    with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("SELECT firstName, lastName, phoneNumber, address FROM users WHERE email = ?", (email,))
+                data = cur.fetchone()
+
+    print(data)
+
+    user_data = {
+        'firstName': data[0],
+        'lastName': data[1],
+        'phoneNumber': data[2],
+        'address': data[3]
+    }
+
     
-    return render_template('account.html', title="Account", email=email)
+    return render_template('account.html', title="Account", email=email, user_data=user_data)
+
+@app.route('/logout')
+def logout():
+    session.pop('email', None)
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

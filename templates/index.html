@@ -1,8 +1,69 @@
-{% extends "main.html" %}
-{% block header %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dojo</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/login.css">
+
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/events">Events</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact</a></li>
+                {% if session['email'] %}
+                    <li><a href="/account">Account</a></li>
+                    <li><a href="{{url_for('logout')}}">Logout</a></li>
+                {% else %}
+                    <li><a href="/login">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+<div class="hero">
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo name" class="logo">
     <h1>Welcome to Dojo</h1>
     <p>Discover the best coding website you've ever laid your eyes on.</p>
     <a href="{{ url_for('events') }}" class="hero-btn">View Events</a>
 </div>
-{% endblock %}
+
+</header>
+    <main>
+        
+    </main>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Company Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('events') }}">Events</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+  
+                </ul>
+            </div>
+            <div class="footer-social-media">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><img src="{{ url_for('static', filename='images/facebook.png') }}" alt="Facebook"></a>
+                    <a href="#" aria-label="Twitter"><img src="{{ url_for('static', filename='images/twitter.png') }}" alt="Twitter"></a>
+                    <a href="#" aria-label="Instagram"><img src="{{ url_for('static', filename='images/instagram.png') }}" alt="Instagram"></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 The Dojo Project. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+

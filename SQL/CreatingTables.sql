@@ -121,3 +121,9 @@ CREATE TABLE coding_lessons (
 );
 
 ALTER TABLE bookings DROP COLUMN status
+
+-- Inserting Data
+INSERT INTO events (name, description, date, location, created_at) VALUES ('Coding Workshop', 'A workshop for beginners to learn the basics of coding', '2021-12-01 10:00:00', 'Online', '2021-11-01 10:00:00');
+INSERT INTO events (name, description, date, location, created_at) VALUES ('Coding Workshop', 'A workshop for beginners to learn the basics of coding', '2021-12-01 10:00:00', 'Online', '2021-11-01 10:00:00');
+INSERT INTO events (name, description, date, location, created_at) VALUES ('Coding Workshop', 'A workshop for beginners to learn the basics of coding', '2021-12-01 10:00:00', 'Online', '2021-11-01 10:00:00');
+INSERT INTO events (name, description, date, location, created_at) VALUES ('Coding Workshop', 'A workshop for beginners to learn the basics of coding', '2021-12-01 10:00:00', 'Online', '2021-11-01 10:00:00');
