@@ -1,28 +1,17 @@
-/* Global Styles */
-body {
-    font-family: 'Arial', sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    background-color: #faf3e0;
-    background-image: url('coffee_backg.png');
-    background-size: cover;
-    background-attachment: fixed;
-    min-height: 1000px;
-}
-
-/* Header and Navigation */
 header {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgb(24, 24, 24); /* Black background for the header */
     color: white;
     padding: 0;
     text-align: center;
+    width: 100%; /* Ensure the header spans the full width */
 }
 
 nav {
     display: flex;
     justify-content: center;
     padding: 1em 0;
+    width: 100%; /* Ensure the nav spans the full width */
+    margin: 0;
 }
 
 nav ul {
@@ -33,15 +22,14 @@ nav ul {
 }
 
 nav ul li {
-    margin: 0 1em;
+    margin: 0 1em; /* Add some spacing between the nav items */
 }
 
 nav ul li a {
-    color: white;
+    color: white; /* Ensure the nav links are white */
     text-decoration: none;
-    font-weight: bold;
-    font-size: 1.2em;
-    transition: color 0.3s;
+    font-weight: bolder; /* Make the font bolder */
+    font-size: 1.4em; /* Increase the font size */
 }
 
 nav ul li a:hover {

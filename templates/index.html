@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,23 +6,11 @@
     <title>The Dojo</title>
     <link rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/login.css">
-
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/events">Events</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/contact">Contact</a></li>
-                {% if session['email'] %}
-                    <li><a href="/account">Account</a></li>
-                    <li><a href="{{url_for('logout')}}">Logout</a></li>
-                {% else %}
-                    <li><a href="/login">Login</a></li>
-                {% endif %}
-            </ul>
+        <nav class="navbar">
+            {% include 'navbar.html' %}
         </nav>
 <div class="hero">
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo name" class="logo">
