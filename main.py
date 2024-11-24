@@ -53,8 +53,10 @@ def customer_login():
 def admin_login():
     return render_template('admin-login.html', title="Admin Login")
 
-@app.route('/forgot-password')
+@app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
+    error = None
+    success = None
     if request.method == 'POST':
         email = request.form.get('email')
         try:
@@ -64,15 +66,16 @@ def forgot_password():
                 data = cur.fetchone()
                 if data:
                     #send email with password reset link
-                    return render_template('forgot-password.html', title="Forgot Password", success="Password reset link sent to your email")
+                    success = "Password reset link sent to your email"
                 else:
-                    return render_template('forgot-password.html', title="Forgot Password", error="Email not found")
+                    error = "Email not found"
         except sqlite3.Error as e:
-            return render_template('forgot-password.html', title="Forgot Password", error=f"Database error, {e}")
-    return render_template('forgot-password.html', title="Forgot Password")
+            error = f"Database error: {e}"
+    return render_template('forgot-password.html', title="Forgot Password", error=error, success=success)
 
 @app.route('/events', methods=['GET', 'POST'])
 def events():
+    error = None
     if request.method == 'POST':
         email = request.form.get('email')
         event = request.form.get('event')
@@ -82,7 +85,7 @@ def events():
                 with sqlite3.connect("dojo.db") as con:
                     quote = "SELECT id FROM users WHERE email = ?"
                     cur = con.cursor()
-                    cur.execute(quote, (email))
+                    cur.execute(quote, (email,))
                     email = cur.fetchone()
                     if email:
                         quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
@@ -97,24 +100,18 @@ def events():
                         eventTime = datetime.datetime.now()
                         eventTime = eventTime.strftime("%Y-%m-%d %H:%M:%S")
                         data = (email[0], eventID, eventTime)
-                        cur.execute((quote), (data))
+                        cur.execute(quote, data)
                         con.commit()
                         con.close()
                         return render_template('events.html', title="Events")
                     else:
-                        return redirect('/events')
+                        error = "User not found"
             except sqlite3.Error as e:
-                return render_template('events.html', title="Events", error=f"Database error: {e}")
+                error = f"Database error: {e}"
         elif form_id == 'waiting-list-form':
             #put main code here
-            return render_template('events.html', title="Events")
-        else:
-            return render_template('events.html', title="Events")
-    else:
-        return render_template('events.html', title="Events")
-
-
-
+            pass
+    return render_template('events.html', title="Events", error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -136,14 +133,12 @@ def register():
                 con.commit()
                 session['email'] = email
                 return redirect(url_for('account'))
-                
-
         except sqlite3.Error as e:
             error = f"Database error: {e}"
     return render_template('register.html', title="Register", error=error)
 
 @app.errorhandler(404)
-def error_404(error):   
+def error_404(_):   
     return render_template('404.html', title="404")
 
 @app.route('/account')
@@ -154,21 +149,20 @@ def account():
     email = session['email']
 
     with sqlite3.connect("dojo.db") as con:
-                cur = con.cursor()
-                cur.execute("SELECT firstName, lastName, phoneNumber, address FROM users WHERE email = ?", (email,))
-                data = cur.fetchone()
+        cur = con.cursor()
+        cur.execute("SELECT firstName, lastName, phoneNumber, address FROM users WHERE email = ?", (email,))
+        data = cur.fetchone()
 
-    print(data)
-
-    user_data = {
-        'firstName': data[0],
-        'lastName': data[1],
-        'phoneNumber': data[2],
-        'address': data[3]
-    }
-
-    
-    return render_template('account.html', title="Account", email=email, user_data=user_data)
+    if data:
+        user_data = {
+            'firstName': data[0],
+            'lastName': data[1],
+            'phoneNumber': data[2],
+            'address': data[3]
+        }
+        return render_template('account.html', title="Account", email=email, user_data=user_data)
+    else:
+        return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():

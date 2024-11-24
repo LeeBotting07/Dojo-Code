@@ -16,6 +16,7 @@
                 <li><a href="/about">About Us</a></li>
                 <li><a href="/contact">Contact</a></li>
                 {% if session['email'] %}
+                    <li><a href="{{url_for('account')}}">My Account</a></li>
                     <li><a href="{{url_for('logout')}}">Logout</a></li>
                 {% else %}
                     <li><a href="/login">Login</a></li>
