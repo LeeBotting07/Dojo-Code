@@ -1,19 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
-    <link rel="stylesheet" href="/static/main.css">
-</head>
-<body>
-    <header>
-        <nav>
-            {% include 'navbar.html' %}
-        </nav>
-    </header>
+{% extends "main.html" %}
 
-    <main>
+{% block content %}
         <h1>About Us</h1>
         
         <!-- Fixed invalid <p1> tag to <p> -->
@@ -86,35 +73,7 @@
                 <li>Address: 123 Coding Lane, Tech City, TX 12345</li>
             </ul>
         </section>
-    </main>
+{% endblock %}
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="/static/images/logo.png" alt="Company Logo" class="footer-logo-img">
-            </div>
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#events">Events</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#privacy">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-social-media">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#" aria-label="Facebook"><img src="/static/images/facebook.png" alt="Facebook"></a>
-                    <a href="#" aria-label="Twitter"><img src="/static/images/twitter.png" alt="Twitter" class="social-icon"></a>
-                    <a href="#" aria-label="Instagram"><img src="/static/images/instagram.png" alt="Instagram" class="social-icon"></a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 The Dojo Project. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
+
+    
