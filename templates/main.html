@@ -18,9 +18,13 @@
                 <li><a href="/contact">Contact</a></li>
                 {% if session['email'] %}
                     <li><a href="/account">Account</a></li>
-                    <li><a href="{{url_for('logout')}}">Logout</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% if session['role'] == 'admin' %}
+                        <li><a href="/admin-panel">Admin Panel</a></li>
+                    {% endif %}
                 {% else %}
                     <li><a href="/login">Login</a></li>
+                    <li><a href="/admin-login">Admin Login</a></li> 
                 {% endif %}
             </ul>
         </nav>

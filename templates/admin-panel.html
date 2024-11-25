@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+{% block content %}
+
+<main class="admin-panel">
+    <h1>Admin Panel</h1>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+
+    <h2>Manage Events</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="event_name">Event Name</label>
+            <input type="text" id="event_name" name="event_name" required placeholder="Enter event name">
+        </div>
+        <div class="form-group">
+            <label for="event_description">Event Description</label>
+            <textarea id="event_description" name="event_description" required placeholder="Enter event description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="event_date">Event Date</label>
+            <input type="date" id="event_date" name="event_date" required>
+        </div>
+        <button type="submit" name="action" value="add_event" class="btn btn-primary">Add Event</button>
+    </form>
+
+    <h3>Existing Events</h3>
+    <ul>
+        {% for event in events %}
+            <li>
+                <strong>{{ event[1] }}</strong> - {{ event[2] }} ({{ event[3] }})
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="event_id" value="{{ event[0] }}">
+                    <button type="submit" name="action" value="remove_event" class="btn btn-danger">Remove</button>
+                </form>
+            </li>
+        {% else %}
+            <li>No events found.</li>
+        {% endfor %}
+    </ul>
+</main>
+
+{% endblock %}

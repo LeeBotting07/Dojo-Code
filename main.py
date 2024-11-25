@@ -51,9 +51,80 @@ def customer_login():
             error = f"Database error: {e}"
     return render_template('customer-login.html', title="Customer Login", error=error)
 
-@app.route('/admin-login')
+@app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
-    return render_template('admin-login.html', title="Admin Login")
+    error = None
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("SELECT password, role FROM users WHERE email = ?", (email,))
+                data = cur.fetchone()
+
+                if data:
+                    hashed_password, role = data
+                    # Check the password
+                    if bcrypt.check_password_hash(hashed_password, password) and role == 'admin':
+                        session['email'] = email  # Set the session variable
+                        session['role'] = role  # Set the role for the session
+                        return redirect(url_for('admin_panel'))  
+                    else:
+                        error = "Invalid email or password"
+                else:
+                    error = "Invalid email or password"
+        except sqlite3.Error as e:
+            error = f"Database error: {e}"
+
+    return render_template('admin-login.html', title="Admin Login", error=error)
+
+@app.route('/admin-panel', methods=['GET', 'POST'])
+def admin_panel():
+    if 'admin' not in session:
+        return redirect(url_for('admin_login'))  # Redirect to admin login if not logged in
+    
+    error = None
+    success = None
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'add_event':
+            event_name = request.form.get('event_name')
+            event_description = request.form.get('event_description')
+            event_date = request.form.get('event_date')
+            try:
+                with sqlite3.connect("dojo.db") as con:
+                    cur = con.cursor()
+                    cur.execute("INSERT INTO events (name, description, date) VALUES (?, ?, ?)", (event_name, event_description, event_date))
+                    con.commit()
+                    success = "Event added successfully!"
+            except sqlite3.Error as e:
+                error = f"Database error: {e}"
+        elif action == 'remove_event':
+            event_id = request.form.get('event_id')
+            try:
+                with sqlite3.connect("dojo.db") as con:
+                    cur = con.cursor()
+                    cur.execute("DELETE FROM events WHERE id = ?", (event_id,))
+                    con.commit()
+                    success = "Event removed successfully!"
+            except sqlite3.Error as e:
+                error = f"Database error: {e}"
+
+    # Fetch all events to display
+    with sqlite3.connect("dojo.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM events")
+        events = cur.fetchall()
+
+    return render_template('admin-dashboard.html', title="Admin Panel", events=events, error=error, success=success)
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    if 'email' not in session or session.get('role') != 'admin':
+        return redirect(url_for('admin_login'))  # Redirect to admin login if not logged in as admin
+    return render_template('admin-dashboard.html', title="Admin Dashboard")  # Render the admin dashboard page
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -78,18 +149,30 @@ def forgot_password():
 @app.route('/events', methods=['GET', 'POST'])
 def events():
     error = None
+    events_list = []
+
+    # Fetch all events from the database to display
+    try:
+        with sqlite3.connect("dojo.db") as con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM events")
+            events_list = cur.fetchall()
+    except sqlite3.Error as e:
+        error = f"Database error: {e}"
+
     if request.method == 'POST':
         email = request.form.get('email')
         event = request.form.get('event')
         form_id = request.form.get('form_id')
+
         if form_id == 'booking-form':
             try:
                 with sqlite3.connect("dojo.db") as con:
                     quote = "SELECT id FROM users WHERE email = ?"
                     cur = con.cursor()
                     cur.execute(quote, (email,))
-                    email = cur.fetchone()
-                    if email:
+                    user = cur.fetchone()
+                    if user:
                         quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
                         if event == 'event1':
                             eventID = 1
@@ -101,19 +184,19 @@ def events():
                             eventID = 4
                         eventTime = datetime.datetime.now()
                         eventTime = eventTime.strftime("%Y-%m-%d %H:%M:%S")
-                        data = (email[0], eventID, eventTime)
+                        data = (user[0], eventID, eventTime)
                         cur.execute(quote, data)
                         con.commit()
-                        con.close()
-                        return render_template('events.html', title="Events")
+                        return redirect(url_for('events'))  # Redirect to events page after booking
                     else:
-                        error = "User not found"
+                        error = "User  not found"
             except sqlite3.Error as e:
                 error = f"Database error: {e}"
         elif form_id == 'waiting-list-form':
-            #put main code here
+            # Handle waiting list form submission here
             pass
-    return render_template('events.html', title="Events", error=error)
+    
+    return render_template('events.html', title="Events", events=events_list, error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -138,6 +221,42 @@ def register():
         except sqlite3.Error as e:
             error = f"Database error: {e}"
     return render_template('register.html', title="Register", error=error)
+
+@app.route('/admin-register', methods=['GET', 'POST'])
+def admin_register():
+    error = None
+    if request.method == 'POST':
+        firstname = request.form.get('firstname')
+        lastname = request.form.get('lastname')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        phone = request.form.get('phone')
+        address = request.form.get('address')
+        
+        # Hash the password for security
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        role = 'admin'  # Set role for admin
+
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                
+                # Check if the email already exists
+                cur.execute("SELECT email FROM users WHERE email = ?", (email,))
+                existing_email = cur.fetchone()
+                
+                if existing_email:
+                    error = "Email address already exists. Please use a different email."
+                else:
+                    cur.execute("INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, address, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                                (username, email, hashed_password, firstname, lastname, phone, address, role))
+                    con.commit()
+                    return redirect(url_for('admin_panel'))  # Redirect to admin panel after successful registration
+        except sqlite3.Error as e:
+            error = f"Database error: {e}"
+
+    return render_template('admin-register.html', title="Admin Register", error=error)
 
 @app.errorhandler(404)
 def error_404(_):   
@@ -172,6 +291,7 @@ def account():
 @app.route('/logout')
 def logout():
     session.pop('email', None)
+    session.pop('admin', None)
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
