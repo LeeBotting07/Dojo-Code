@@ -29,6 +29,7 @@ def contact():
 def login():
     return render_template('login.html', title="Login")
 
+
 @app.route('/customer-login', methods=['GET', 'POST'])
 def customer_login():
     error = None
@@ -41,8 +42,9 @@ def customer_login():
                 cur.execute("SELECT password FROM users WHERE email = ?", (email,))
                 data = cur.fetchone()
                 if data and bcrypt.check_password_hash(data[0], password):
-                    session['email'] = email
-                    return redirect(url_for('account'))
+                    session['email'] = email  # Set the session variable
+                    print(f"User  {email} logged in successfully.")  # Debug statement
+                    return redirect(url_for('account'))  # Redirect to account page
                 else:
                     error = "Invalid username or password"
         except sqlite3.Error as e:
@@ -144,9 +146,11 @@ def error_404(_):
 @app.route('/account')
 def account():
     if 'email' not in session:
-        return redirect(url_for('login'))
+        print("User  not logged in, redirecting to login.")  # Debug statement
+        return redirect(url_for('login'))  # Redirect to login if not logged in
     
     email = session['email']
+    print(f"Fetching account data for {email}.")  # Debug statement
 
     with sqlite3.connect("dojo.db") as con:
         cur = con.cursor()
@@ -162,7 +166,8 @@ def account():
         }
         return render_template('account.html', title="Account", email=email, user_data=user_data)
     else:
-        return redirect(url_for('home'))
+        print("User  data not found, redirecting to home.")  # Debug statement
+        return redirect(url_for('home'))  # Redirect to home if user data is not found
 
 @app.route('/logout')
 def logout():
