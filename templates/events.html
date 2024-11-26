@@ -14,18 +14,19 @@
         <section class="booking">
             <h2>Book Your Spot</h2>
             <form id="booking-form" method="post" action="/events">
-                <label type="hidden" value="booking-form" name="form_id" id="form_id"></label>
+                <label for="form_id"></label>
+                <input type="hidden" value="booking-form" name="form_id" id="form_id">
                 <label for="name">Your Name:</label>
                 <input type="text" id="name" name="name" placeholder="Name" required>
 
                 <label for="email">Your Email:</label>
                 <input type="email" id="email" name="email" required>
 
-                <label for="event">Select Event:</label>
-                <select id="event" name="event" required>
+                <label for="eventID">Select Event:</label>
+                <select id="eventID" name="eventID" required>
                     <option value="">--Please choose an event--</option>
                     {% for event in events %}
-                        <option value="event{{ event[0] }}">{{ event[1] }}</option> <!-- Assuming event[0] is ID and event[1] is name -->
+                        <option value="{{ event[0] }}">{{ event[1] }}</option> <!-- Assuming event[0] is ID and event[1] is name -->
                     {% endfor %}
                 </select>
 

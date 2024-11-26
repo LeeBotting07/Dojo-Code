@@ -169,22 +169,21 @@ def events():
 
     if request.method == 'POST':
         email = request.form.get('email')
-        event = request.form.get('event')
+        eventID = int(request.form.get('eventID'))
         form_id = request.form.get('form_id')
 
         if form_id == 'booking-form':
             try:
                 with sqlite3.connect("dojo.db") as con:
-                    quote = "SELECT id FROM users WHERE email = ?"
+                    quote = "SELECT userID FROM users WHERE email = ?"
                     cur = con.cursor()
                     cur.execute(quote, (email,))
                     user = cur.fetchone()
                     if user:
                         quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
                         # Assuming eventID corresponds to the event selected
-                        eventID = int(event.split('event')[1])  # Extract event ID from the string
-                        eventTime = datetime.datetime.now()
-                        eventTime = eventTime.strftime("%Y-%m-%d %H:%M:%S")
+                        currentTime = datetime.datetime.now()
+                        eventTime = currentTime.strftime("%Y-%m-%d %H:%M:%S")
                         data = (user[0], eventID, eventTime)
                         cur.execute(quote, data)
                         con.commit()
