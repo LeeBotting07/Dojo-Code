@@ -157,6 +157,7 @@ def forgot_password():
 def events():
     error = None
     events_list = []
+    user_bookings = []  # List to hold the user's bookings
 
     # Fetch all events from the database to display
     try:
@@ -164,39 +165,49 @@ def events():
             cur = con.cursor()
             cur.execute("SELECT * FROM events")  # Fetch all events
             events_list = cur.fetchall()
+            
+            # Check if the user is logged in to fetch their bookings
+            if 'email' in session:
+                email = session['email']
+                cur.execute("""
+                    SELECT e.name, e.date, b.booking_date 
+                    FROM bookings b 
+                    JOIN events e ON b.eventID = e.eventID 
+                    WHERE b.userID = (SELECT userID FROM users WHERE email = ?)
+                """, (email,))
+                user_bookings = cur.fetchall()  # Fetch user's booked events with details
     except sqlite3.Error as e:
         error = f"Database error: {e}"
 
     if request.method == 'POST':
-        email = request.form.get('email')
-        eventID = int(request.form.get('eventID'))
-        form_id = request.form.get('form_id')
+        if 'email' not in session:
+            error = "You must be logged in to make a booking."
+        else:
+            email = session['email']
+            eventID = int(request.form.get('eventID'))
+            form_id = request.form.get('form_id')
 
-        if form_id == 'booking-form':
-            try:
-                with sqlite3.connect("dojo.db") as con:
-                    quote = "SELECT userID FROM users WHERE email = ?"
-                    cur = con.cursor()
-                    cur.execute(quote, (email,))
-                    user = cur.fetchone()
-                    if user:
-                        quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
-                        # Assuming eventID corresponds to the event selected
-                        currentTime = datetime.datetime.now()
-                        eventTime = currentTime.strftime("%Y-%m-%d %H:%M:%S")
-                        data = (user[0], eventID, eventTime)
-                        cur.execute(quote, data)
-                        con.commit()
-                        return redirect(url_for('events'))  # Redirect to events page after booking
-                    else:
-                        error = "User  not found"
-            except sqlite3.Error as e:
-                error = f"Database error: {e}"
-        elif form_id == 'waiting-list-form':
-            # Handle waiting list form submission here
-            pass
-    
-    return render_template('events.html', title="Events", events=events_list, error=error)
+            if form_id == 'booking-form':
+                try:
+                    with sqlite3.connect("dojo.db") as con:
+                        quote = "SELECT userID FROM users WHERE email = ?"
+                        cur = con.cursor()
+                        cur.execute(quote, (email,))
+                        user = cur.fetchone()
+                        if user:
+                            quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
+                            currentTime = datetime.datetime.now()
+                            eventTime = currentTime.strftime("%Y-%m-%d %H:%M:%S")
+                            data = (user[0], eventID, eventTime)
+                            cur.execute(quote, data)
+                            con.commit()
+                            return redirect(url_for('events'))  # Redirect to events page after booking
+                        else:
+                            error = "User  not found"
+                except sqlite3.Error as e:
+                    error = f"Database error: {e}"
+
+    return render_template('events.html', title="Events", events=events_list, error=error, user_bookings=user_bookings)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

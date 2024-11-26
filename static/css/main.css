@@ -238,6 +238,44 @@ main {
     background-color: #2980b9;
 }
 
+/* Styles for User Bookings Section */
+.user-bookings {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for distinction */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-bookings h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.user-bookings ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}
+
+.user-bookings li {
+    background-color: #ffffff; /* White background for each booking */
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    cursor: pointer; /* Change cursor to pointer for interactivity */
+}
+
+.user-bookings li:hover {
+    background-color: #f0f0f0; /* Lighten background on hover */
+}
+
+.description {
+    margin-top: 10px; /* Space above the description */
+    font-size: 0.9em; /* Slightly smaller font for description */
+    color: #555; /* Dark gray color for description text */
+}
+
 /* Manage Booking Section */
 .manage-booking {
     margin: 40px 0;
