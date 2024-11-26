@@ -162,7 +162,7 @@ def events():
     try:
         with sqlite3.connect("dojo.db") as con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM events")
+            cur.execute("SELECT * FROM events")  # Fetch all events
             events_list = cur.fetchall()
     except sqlite3.Error as e:
         error = f"Database error: {e}"
@@ -181,14 +181,8 @@ def events():
                     user = cur.fetchone()
                     if user:
                         quote = "INSERT INTO bookings (userID, eventID, booking_date) VALUES (?, ?, ?)"
-                        if event == 'event1':
-                            eventID = 1
-                        elif event == 'event2':
-                            eventID = 2
-                        elif event == 'event3':
-                            eventID = 3
-                        else:
-                            eventID = 4
+                        # Assuming eventID corresponds to the event selected
+                        eventID = int(event.split('event')[1])  # Extract event ID from the string
                         eventTime = datetime.datetime.now()
                         eventTime = eventTime.strftime("%Y-%m-%d %H:%M:%S")
                         data = (user[0], eventID, eventTime)
