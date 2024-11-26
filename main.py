@@ -7,6 +7,10 @@ app = Flask(__name__)
 app.secret_key = 'password'
 bcrypt = Bcrypt(app)
 
+@app.context_processor
+def inject_username():
+    return dict(email=session.get('email'))
+
 # Routes
 @app.route('/')
 @app.route('/home')
@@ -39,10 +43,11 @@ def customer_login():
         try:
             with sqlite3.connect("dojo.db") as con:
                 cur = con.cursor()
-                cur.execute("SELECT password FROM users WHERE email = ?", (email,))
+                cur.execute("SELECT password, role FROM users WHERE email = ?", (email,))
                 data = cur.fetchone()
                 if data and bcrypt.check_password_hash(data[0], password):
                     session['email'] = email  # Set the session variable
+                    session['role'] = data[1]  # Set the role for the session
                     print(f"User  {email} logged in successfully.")  # Debug statement
                     return redirect(url_for('account'))  # Redirect to account page
                 else:
@@ -67,7 +72,9 @@ def admin_login():
                 if data:
                     hashed_password, role = data
                     # Check the password
-                    if bcrypt.check_password_hash(hashed_password, password) and role == 'admin':
+                    if data[1] != 'admin':
+                        error = "Not an admin account"
+                    elif bcrypt.check_password_hash(hashed_password, password) and role == 'admin':
                         session['email'] = email  # Set the session variable
                         session['role'] = role  # Set the role for the session
                         return redirect(url_for('admin_panel'))  
@@ -82,8 +89,8 @@ def admin_login():
 
 @app.route('/admin-panel', methods=['GET', 'POST'])
 def admin_panel():
-    if 'admin' not in session:
-        return redirect(url_for('admin_login'))  # Redirect to admin login if not logged in
+    if 'role' not in session or session['role'] != 'admin':
+        return redirect(url_for('admin_login'))
     
     error = None
     success = None
@@ -102,11 +109,11 @@ def admin_panel():
             except sqlite3.Error as e:
                 error = f"Database error: {e}"
         elif action == 'remove_event':
-            event_id = request.form.get('event_id')
+            event_id = int(request.form.get('event_id'))
             try:
                 with sqlite3.connect("dojo.db") as con:
                     cur = con.cursor()
-                    cur.execute("DELETE FROM events WHERE id = ?", (event_id,))
+                    cur.execute("DELETE FROM events WHERE eventID = ?", (event_id,))
                     con.commit()
                     success = "Event removed successfully!"
             except sqlite3.Error as e:
@@ -118,13 +125,13 @@ def admin_panel():
         cur.execute("SELECT * FROM events")
         events = cur.fetchall()
 
-    return render_template('admin-dashboard.html', title="Admin Panel", events=events, error=error, success=success)
+    return render_template('admin-panel.html', title="Admin Panel", events=events, error=error, success=success)
 
-@app.route('/admin-dashboard')
-def admin_dashboard():
-    if 'email' not in session or session.get('role') != 'admin':
-        return redirect(url_for('admin_login'))  # Redirect to admin login if not logged in as admin
-    return render_template('admin-dashboard.html', title="Admin Dashboard")  # Render the admin dashboard page
+#@app.route('/admin-dashboard')
+#def admin_dashboard():
+#    if 'email' not in session or session.get('role') != 'admin':
+#        return redirect(url_for('admin_login'))  # Redirect to admin login if not logged in as admin
+#    return render_template('admin-dashboard.html', title="Admin Dashboard")  # Render the admin dashboard page
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -273,7 +280,7 @@ def account():
 
     with sqlite3.connect("dojo.db") as con:
         cur = con.cursor()
-        cur.execute("SELECT firstName, lastName, phoneNumber, address FROM users WHERE email = ?", (email,))
+        cur.execute("SELECT firstName, lastName, phoneNumber, address, role FROM users WHERE email = ?", (email,))
         data = cur.fetchone()
 
     if data:
@@ -281,7 +288,8 @@ def account():
             'firstName': data[0],
             'lastName': data[1],
             'phoneNumber': data[2],
-            'address': data[3]
+            'address': data[3],
+            'role': data[4]
         }
         return render_template('account.html', title="Account", email=email, user_data=user_data)
     else:
@@ -292,6 +300,7 @@ def account():
 def logout():
     session.pop('email', None)
     session.pop('admin', None)
+    session['role'] = None
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
