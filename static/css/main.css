@@ -324,8 +324,115 @@ main {
 }
 
 
-/*About Section*/
+/* About Page Styles */
+.about-page {
+    padding: 2em;
+    background-color: #f0f8ff; /* Light blue background */
+    color: #333;
+    line-height: 1.6;
+}
 
+.about-page h1, .about-page h2 {
+    text-align: center;
+    margin-bottom: 1em;
+    color: #2c3e50;
+    font-family: 'Arial Black', sans-serif; /* Bold font */
+}
+
+.about-page p {
+    margin-bottom: 1.5em;
+    text-align: justify;
+    font-family: 'Georgia', serif; /* Serif font for paragraphs */
+}
+
+.about-page .team, .about-page .history, .about-page .values, .about-page .testimonials, .about-page .partners, .about-page .contact {
+    margin-bottom: 2em;
+    padding: 1.5em;
+    background-color: #ffffff; /* White background for sections */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #3498db; /* Blue border on the left */
+}
+
+.about-page .team-member, .about-page .testimonial {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5em;
+}
+
+.about-page .team-member img, .about-page .testimonial img {
+    border-radius: 50%;
+    margin-right: 1em;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 3px solid #3498db; /* Blue border around images */
+}
+
+.about-page .team-member h3, .about-page .testimonial p {
+    margin: 0;
+    color: #2980b9; /* Darker blue for text */
+}
+
+.about-page .values ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-page .values li {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+    position: relative;
+    font-family: 'Courier New', monospace; /* Monospace font for values */
+}
+
+.about-page .values li::before {
+    content: '✔';
+    position: absolute;
+    left: 0;
+    color: #27ae60; /* Green checkmark */
+    font-size: 1.2em;
+}
+
+.about-page .partners ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.about-page .partners li {
+    margin: 0.5em 1em;
+    padding: 0.5em 1em;
+    background-color: #e3f2fd; /* Light blue background */
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Verdana', sans-serif; /* Sans-serif font for partners */
+}
+
+.about-page .contact ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-page .contact li {
+    margin-bottom: 0.5em;
+    font-family: 'Tahoma', sans-serif; /* Sans-serif font for contact */
+}
+
+.about-page .contact li::before {
+    content: '📞';
+    margin-right: 0.5em;
+}
+
+.about-page .contact li:nth-child(2)::before {
+    content: '✉️';
+}
+
+.about-page .contact li:nth-child(3)::before {
+    content: '📍';
+}
 
 /* Admin Panel Styles */
 .admin-panel {
