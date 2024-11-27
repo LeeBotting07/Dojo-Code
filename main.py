@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 from flask_bcrypt import Bcrypt
 import datetime
+import random
+import string
 
 app = Flask(__name__)
 app.secret_key = 'password'
@@ -102,8 +104,13 @@ def admin_panel():
             event_date = request.form.get('event_date')
             try:
                 with sqlite3.connect("dojo.db") as con:
+                    classID = ''.join(random.sample(string.ascii_letters, 15)) # Automatically generate a classID made of text
                     cur = con.cursor()
-                    cur.execute("INSERT INTO events (name, description, date) VALUES (?, ?, ?)", (event_name, event_description, event_date))
+                    cur.execute("SELECT * FROM events WHERE classID = ?", (classID,)) # Check if classID already exists
+                    while cur.fetchone():
+                        classID = ''.join(random.sample(string.ascii_letters, 15)) # Automatically generate a classID made of text
+                        cur.execute("SELECT * FROM events WHERE classID = ?", (classID,)) # Check if classID already exists
+                    cur.execute("INSERT INTO events (name, description, date, classID) VALUES (?, ?, ?, ?)", (event_name, event_description, event_date, classID))
                     con.commit()
                     success = "Event added successfully!"
             except sqlite3.Error as e:
@@ -170,7 +177,7 @@ def events():
             if 'email' in session:
                 email = session['email']
                 cur.execute("""
-                    SELECT e.name, e.date, b.booking_date, e.description, e.eventID 
+                    SELECT e.name, e.date, b.booking_date, e.description, e.classID 
                     FROM bookings b 
                     JOIN events e ON b.eventID = e.eventID 
                     WHERE b.userID = (SELECT userID FROM users WHERE email = ?)
@@ -270,7 +277,7 @@ def admin_register():
     return render_template('admin-register.html', title="Admin Register", error=error)
 
 @app.errorhandler(404)
-def error_404(_):   
+def error_404(error):   
     return render_template('404.html', title="404")
 
 @app.route('/account')
