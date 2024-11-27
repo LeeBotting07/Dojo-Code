@@ -165,6 +165,7 @@ def events():
     error = None
     events_list = []
     user_bookings = []  # List to hold the user's bookings
+    booked_event_ids = []  # List to hold the IDs of events the user has already booked
 
     # Fetch all events from the database to display
     try:
@@ -177,12 +178,13 @@ def events():
             if 'email' in session:
                 email = session['email']
                 cur.execute("""
-                    SELECT e.name, e.date, b.booking_date, e.description, e.classID 
+                    SELECT e.name, e.date, b.booking_date, e.description, e.classID, e.eventID 
                     FROM bookings b 
                     JOIN events e ON b.eventID = e.eventID 
                     WHERE b.userID = (SELECT userID FROM users WHERE email = ?)
                 """, (email,))
                 user_bookings = cur.fetchall()  # Fetch user's booked events with details
+                booked_event_ids = [booking[5] for booking in user_bookings]  # Extract booked event IDs
     except sqlite3.Error as e:
         error = f"Database error: {e}"
 
@@ -210,11 +212,47 @@ def events():
                             con.commit()
                             return redirect(url_for('events'))  # Redirect to events page after booking
                         else:
-                            error = "User  not found"
+                            error = "User not found"
                 except sqlite3.Error as e:
                     error = f"Database error: {e}"
 
-    return render_template('events.html', title="Events", events=events_list, error=error, user_bookings=user_bookings)
+    # Filter out events that the user has already booked
+    available_events = [event for event in events_list if event[0] not in booked_event_ids]
+
+    return render_template('events.html', title="Events", events=available_events, error=error, user_bookings=user_bookings)
+
+@app.route('/cancel-booking', methods=['POST'])
+def cancel_booking():
+    error = None
+    user_bookings = []  # Initialize user_bookings
+    if 'email' not in session:
+        error = "You must be logged in to cancel a booking."
+    else:
+        email = session['email']
+        eventID = int(request.form.get('cancel-event'))
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("""
+                    DELETE FROM bookings 
+                    WHERE eventID = ? AND userID = (SELECT userID FROM users WHERE email = ?)
+                """, (eventID, email))
+                con.commit()
+                
+                # Fetch updated user bookings
+                cur.execute("""
+                    SELECT e.name, e.date, b.booking_date, e.description, e.classID, e.eventID 
+                    FROM bookings b 
+                    JOIN events e ON b.eventID = e.eventID 
+                    WHERE b.userID = (SELECT userID FROM users WHERE email = ?)
+                """, (email,))
+                user_bookings = cur.fetchall()
+                
+                return redirect(url_for('events'))  # Redirect to events page after cancellation
+        except sqlite3.Error as e:
+            error = f"Database error: {e}"
+    
+    return render_template('events.html', title="Events", error=error, user_bookings=user_bookings)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
