@@ -1,8 +1,8 @@
-function toggleDescription(element) {
-    const description = element.querySelector('.description');
-    if (description.style.display === "none" || description.style.display === "") {
-        description.style.display = "block"; // Show the description
+function changeClass(id) {
+    var element = document.querySelector("#" + id);
+    if (element.style.display === "none") {
+        element.style.display = "block";
     } else {
-        description.style.display = "none"; // Hide the description
+        element.style.display = "none";
     }
 }

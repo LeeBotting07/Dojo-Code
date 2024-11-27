@@ -170,7 +170,7 @@ def events():
             if 'email' in session:
                 email = session['email']
                 cur.execute("""
-                    SELECT e.name, e.date, b.booking_date 
+                    SELECT e.name, e.date, b.booking_date, e.description, e.eventID 
                     FROM bookings b 
                     JOIN events e ON b.eventID = e.eventID 
                     WHERE b.userID = (SELECT userID FROM users WHERE email = ?)

@@ -49,12 +49,15 @@ CREATE TABLE order_items (
 );
 
 -- Events Table
+
+DROP TABLE IF EXISTS events;
 CREATE TABLE events (
     eventID INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     description TEXT,
     date TIMESTAMP NOT NULL,
     location TEXT,
+    classID TEXT NOT NULL,
     created_at TIMESTAMP
 );
 
