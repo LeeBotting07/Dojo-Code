@@ -1,32 +1,36 @@
 {% extends "main.html" %}
-{% block content %}
-    <main>
-        <section class="gallery">
-            <h2>Event Highlights</h2>
-            <div class="image-grid">
-                <img src="/static/images/event1.png" alt="Event 1">
-                <img src="/static/images/event2.png" alt="Event 2">
-                <img src="/static/images/event3.png" alt="Event 3">
-                <img src="/static/images/event4.png" alt="Event 4">
-            </div>
-        </section>
 
-        <section class="booking">
-            <h2>Book Your Spot</h2>
-            <form id="booking-form" method="post" action="/events">
-                <label for="form_id"></label>
-                <input type="hidden" value="booking-form" name="form_id" id="form_id">
-                <label for="eventID">Select Event:</label>
-                <select id="eventID" name="eventID" required>
-                    <option value="">--Please choose an event--</option>
+{% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        <section class="upcoming-events">
+            <h2>Upcoming Events</h2>
+            {% if events %}
+                <ul>
                     {% for event in events %}
-                        <option value="{{ event[0] }}">{{ event[1] }}</option>
+                        <li class="event-item">
+                            <h3>{{ event[1] }}</h3>
+                            <p><strong>Date:</strong> {{ event[2] }}</p>
+                            <p><strong>Description:</strong> {{ event[3] }}</p>
+                            <form method="post" action="/events">
+                                <input type="hidden" name="form_id" value="booking-form">
+                                <input type="hidden" name="eventID" value="{{ event[0] }}">
+                                <button type="submit" class="book-button">Book Now</button>
+                            </form>
+                        </li>
                     {% endfor %}
-                </select>
-                <button type="submit" class="book-button">Go to Booking Page</button>
-            </form>
-            {% if error %}
-                <p class="error">{{ error }}</p>
+                </ul>
+            {% else %}
+                <p>No upcoming events available.</p>
             {% endif %}
         </section>
 
@@ -50,13 +54,11 @@
             {% if user_bookings %}
                 <ul>
                     {% for booking in user_bookings %}
-                        <li class="booking-item" onclick="changeClass('{{booking[4]}}')">
+                        <li class="booking-item">
                             <p><strong>Event:</strong> {{ booking[0] }}</p>
                             <p><strong>Date:</strong> {{ booking[1] }}</p>
                             <p><strong>Time:</strong> {{ booking[2] }}</p>
-                            <div class="{{booking[4]}}" style="display: none;">
-                                <p><strong>Description:</strong> {{ booking[3] }}</p>
-                            </div>
+                            <p><strong>Description:</strong> {{ booking[3] }}</p>
                         </li>
                     {% endfor %}
                 </ul>
@@ -65,5 +67,6 @@
             {% endif %}
         </section>
     </main>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

@@ -538,3 +538,42 @@ li {
 li:last-child {
     border-bottom: none;
 }
+
+/*-----------------------------------------------*/
+/* Flash Message Styles                          */
+/*-----------------------------------------------*/
+
+.flash-messages {
+    width: 100%;
+    position: relative;
+    z-index: 1000; /* Make sure it appears above other content */
+}
+
+.flash {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    animation: flash 2s ease-in-out; /* Flashing animation */
+}
+
+.flash.success {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+}
+
+.flash.error {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+}
+
+/* Flashing animation */
+@keyframes flash {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/*-----------------------------------------------*/
+/* End of Flash Message Styles                   */
+/*-----------------------------------------------*/
