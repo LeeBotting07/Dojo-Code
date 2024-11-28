@@ -187,10 +187,8 @@ def cancel_booking():
                 """, (email,))
                 user_bookings = cur.fetchall()
                 flash('Your booking has been canceled successfully!', 'success')  # Flash success message
-                return redirect(url_for('events'))  # Redirect to events page after cancellation
         except sqlite3.Error as e:
             error = f"Database error: {e}"
-
     return render_template('events.html', title="Events", user_bookings=user_bookings, error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -298,12 +296,31 @@ def events():
             try:
                 with sqlite3.connect("dojo.db") as con:
                     cur = con.cursor()
+                    # Check if the user has already booked this event
                     cur.execute("""
-                        INSERT INTO bookings (eventID, userID, booking_date) 
-                        VALUES (?, (SELECT userID FROM users WHERE email = ?), ?)
-                    """, (eventID, email, datetime.datetime.now()))
-                    con.commit()
-                    flash('Your booking has been made successfully!', 'success')  # Flash success message
+                        SELECT * FROM bookings 
+                        WHERE eventID = ? AND userID = (SELECT userID FROM users WHERE email = ?)
+                    """, (eventID, email))
+                    existing_booking = cur.fetchone()
+
+                    if existing_booking:
+                        flash('You have already booked this event.', 'error')  # Flash error message
+                    else:
+                        cur.execute("""
+                            INSERT INTO bookings (eventID, userID, booking_date) 
+                            VALUES (?, (SELECT userID FROM users WHERE email = ?), ?)
+                        """, (eventID, email, datetime.datetime.now()))
+                        con.commit()
+                        flash('Your booking has been made successfully!', 'success')  # Flash success message
+
+                        # Fetch updated user bookings after booking
+                        cur.execute("""
+                            SELECT e.name, e.date, b.booking_date, e.description, e.classID, e.eventID 
+                            FROM bookings b 
+                            JOIN events e ON b.eventID = e.eventID 
+                            WHERE b.userID = (SELECT userID FROM users WHERE email = ?)
+                        """, (email,))
+                        user_bookings = cur.fetchall()  # Fetch user bookings
             except sqlite3.Error as e:
                 error = f"Database error: {e}"
         else:
@@ -327,7 +344,7 @@ def events():
                     JOIN events e ON b.eventID = e.eventID 
                     WHERE b.userID = (SELECT userID FROM users WHERE email = ?)
                 """, (email,))
-                user_bookings = cur.fetchall()
+                user_bookings = cur.fetchall()  # Get user bookings
         except sqlite3.Error as e:
             error = f"Database error: {e}"
 
@@ -354,6 +371,41 @@ def send_message():
 
     # Redirect to the contact page
     return redirect(url_for('contact'))
+
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if 'email' not in session:
+        return redirect(url_for('login'))  # Redirect to login if not logged in
+
+    error = None
+    success = None
+
+    if request.method == 'POST':
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        if new_password != confirm_password:
+            error = "New passwords do not match."
+        else:
+            email = session['email']
+            try:
+                with sqlite3.connect("dojo.db") as con:
+                    cur = con.cursor()
+                    cur.execute("SELECT password FROM users WHERE email = ?", (email,))
+                    data = cur.fetchone()
+
+                    if data and bcrypt.check_password_hash(data[0], current_password):
+                        hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+                        cur.execute("UPDATE users SET password = ? WHERE email = ?", (hashed_new_password, email))
+                        con.commit()
+                        success = "Password changed successfully!"
+                    else:
+                        error = "Current password is incorrect."
+            except sqlite3.Error as e:
+                error = f"Database error: {e}"
+
+    return render_template('change-password.html', error=error, success=success)
 
 @app.route('/logout')
 def logout():

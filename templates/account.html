@@ -1,18 +1,32 @@
 {% extends "main.html" %}
 {% block content %}
-    <h2>My Account</h2>
-    <p>Your email address is {{ email }}.</p>
-    
-    <h3>Profile Information</h3>
-    <p><strong>First Name:</strong> {{ user_data.firstName }}</p>
-    <p><strong>Last Name:</strong> {{ user_data.lastName }}</p>
-    <p><strong>Phone Number:</strong> {{ user_data.phoneNumber }}</p>
-    <p><strong>Address:</strong> {{ user_data.address }}</p>
-    <p>hello {{user_data.role}}</p>
-    
-    <h3>Account Actions</h3>
-    <a href="#">Edit Profile</a>
-    <a href="#">Change Password</a>
-    <a href="{{url_for('logout')}}">Logout</a>
+    <div class="account-container">
+        <h2>My Account</h2>
+        <div class="account-info">
+            <p><strong>Email Address:</strong> {{ email }}</p>
+            <h3>Profile Information</h3>
+            <p><strong>First Name:</strong> {{ user_data.firstName }}</p>
+            <p><strong>Last Name:</strong> {{ user_data.lastName }}</p>
+            <p><strong>Phone Number:</strong> {{ user_data.phoneNumber }}</p>
+            <p><strong>Address:</strong> {{ user_data.address }}</p>
+            <p><strong>Role:</strong> {{ user_data.role }}</p>
+        </div>
+        
+        <div class="account-actions">
+            <h3>Account Actions</h3>
+            <a href="#" class="btn btn-primary">Edit Profile</a>
+            <a href="{{ url_for('change_password')}}" class="btn btn-primary">Change Password</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+        
+        <div class="account-activities">
+            <h3>Recent Activities</h3>
+            <!-- Example recent activities, replace with actual data -->
+            <ul>
+                <li>Logged in - Date: 2023-01-01</li>
+                <li>Updated profile - Date: 2023-02-01</li>
+                <li>Changed password - Date: 2023-03-01</li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
-

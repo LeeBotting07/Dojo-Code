@@ -357,12 +357,12 @@ main {
 .about-page .team-member, .about-page .testimonial {
     display: flex;
     align-items: center;
-    margin-bottom: 1.5em;
+    margin: 1.5em;
 }
 
 .about-page .team-member img, .about-page .testimonial img {
     border-radius: 50%;
-    margin-right: 1em;
+    margin: 1em;
     width: 100px;
     height: 100px;
     object-fit: cover;
@@ -370,7 +370,7 @@ main {
 }
 
 .about-page .team-member h3, .about-page .testimonial p {
-    margin: 0;
+    margin: 1;
     color: #2980b9; /* Darker blue for text */
 }
 
@@ -432,6 +432,64 @@ main {
 
 .about-page .contact li:nth-child(3)::before {
     content: '📍';
+}
+
+/*account page*/
+.account-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.account-info, .account-actions, .account-activities {
+    margin-bottom: 20px;
+}
+
+.account-info p, .account-activities ul {
+    margin: 10px 0;
+}
+
+.account-actions a {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.account-activities ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.account-activities li {
+    background-color: #ffffff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Admin Panel Styles */
@@ -537,6 +595,36 @@ li {
 
 li:last-child {
     border-bottom: none;
+}
+
+/* Change Password Page Styles */
+.change-password-page {
+    padding: 2rem;
+}
+
+.change-password-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+}
+
+.change-password-container h1 {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+input[type="password"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 /*-----------------------------------------------*/
