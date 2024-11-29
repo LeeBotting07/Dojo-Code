@@ -42,6 +42,12 @@ def customer_login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+
+        # Check if the email contains '@admin'
+        if '@admin' in email:
+            flash("Admin accounts cannot log in here.", 'error')  # Flash error message
+            return redirect(url_for('admin_login'))  # Redirect to admin login
+        
         try:
             with sqlite3.connect("dojo.db") as con:
                 cur = con.cursor()
@@ -67,6 +73,11 @@ def admin_login():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        # Check if the email contains '@admin'
+        if '@admin' not in email:
+            flash("Only admin accounts can log in here.", 'error')  # Flash error message
+            return redirect(url_for('customer_login'))  # Redirect to customer login
+        
         try:
             with sqlite3.connect("dojo.db") as con:
                 cur = con.cursor()
@@ -75,13 +86,14 @@ def admin_login():
 
                 if data:
                     hashed_password, role = data
-                    # Check the password
-                    if data[1] != 'admin':
-                        error = "Not an admin account"
-                    elif bcrypt.check_password_hash(hashed_password, password) and role == 'admin':
+                    # Check the password and role
+                    if bcrypt.check_password_hash(hashed_password, password) and role == 'admin':
                         session['email'] = email  # Set the session variable
                         session['role'] = role  # Set the role for the session
-                        return redirect(url_for('admin_panel'))  
+                        # Update last login timestamp
+                        cur.execute("UPDATE users SET last_login = ? WHERE email = ?", (datetime.datetime.now(), email))
+                        con.commit()
+                        return redirect(url_for('admin_panel'))  # Redirect to admin panel
                     else:
                         error = "Invalid email or password"
                 else:
@@ -135,12 +147,6 @@ def admin_panel():
         events = cur.fetchall()
 
     return render_template('admin-panel.html', title="Admin Panel", events=events, error=error, success=success)
-
-#@app.route('/admin-dashboard')
-#def admin_dashboard():
-#    if 'email' not in session or session.get('role') != 'admin':
-#        return redirect(url_for('admin_login'))  # Redirect to admin login if not logged in as admin
-#    return render_template('admin-dashboard.html', title="Admin Dashboard")  # Render the admin dashboard page
 
 @app.route('/change-password', methods=['GET', 'POST'])
 def change_password():
@@ -264,6 +270,12 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+
+        # Check if the email contains '@admin'
+        if '@admin' in email:
+            flash("Admin accounts cannot register here.", 'error')  # Flash error message
+            return redirect(url_for('admin_register'))  # Redirect to admin register
+        
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         current_time = datetime.datetime.now()
         try:
@@ -289,7 +301,11 @@ def admin_register():
         phone = request.form.get('phone')
         address = request.form.get('address')
         
-        # Hash the password for security
+        # Check if the email contains '@admin'
+        if '@admin' not in email:
+            flash("Only admin accounts can register here.", 'error')  # Flash error message
+            return redirect(url_for('register'))  # Redirect to customer register
+        
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         role = 'admin'  # Set role for admin
 
@@ -314,7 +330,7 @@ def admin_register():
     return render_template('admin-register.html', title="Admin Register", error=error)
 
 @app.errorhandler(404)
-def error_404(error):   
+def error_404():   
     return render_template('404.html', title="404")
 
 @app.route('/account')
@@ -339,7 +355,7 @@ def account():
             'phoneNumber': data[2],
             'address': data[3],
             'role': data[4],
-            'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M"),
+            'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[5] else None,
             'last_profile_update': datetime.datetime.strptime(data[6], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[6] else None,
             'last_password_change': datetime.datetime.strptime(data[7], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[7] else None
         }
@@ -355,7 +371,6 @@ def events():
     error = None  # Initialize error variable
 
     if request.method == 'POST':
-        # Handle booking logic here
         eventID = int(request.form.get('eventID'))
         email = session.get('email')
 
