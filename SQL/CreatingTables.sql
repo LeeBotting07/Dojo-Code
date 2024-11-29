@@ -27,6 +27,10 @@ CREATE TABLE users (
     created_at TIMESTAMP
 );
 
+ALTER TABLE users ADD COLUMN last_login DATETIME;
+ALTER TABLE users ADD COLUMN last_profile_update DATETIME;
+ALTER TABLE users ADD COLUMN last_password_change DATETIME;
+
 -- Products Table
 CREATE TABLE products (
     productID INTEGER PRIMARY KEY AUTOINCREMENT,

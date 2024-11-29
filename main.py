@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from flask_bcrypt import Bcrypt
-import datetime
+import datetime as datetime
 import random
 import string
 
@@ -50,7 +50,9 @@ def customer_login():
                 if data and bcrypt.check_password_hash(data[0], password):
                     session['email'] = email  # Set the session variable
                     session['role'] = data[1]  # Set the role for the session
-                    print(f"User  {email} logged in successfully.")  # Debug statement
+                    # Update last login timestamp
+                    cur.execute("UPDATE users SET last_login = ? WHERE email = ?", (datetime.datetime.now(), email))
+                    con.commit()
                     return redirect(url_for('account'))  # Redirect to account page
                 else:
                     error = "Invalid username or password"
@@ -151,29 +153,65 @@ def change_password():
         confirm_password = request.form['confirm_password']
 
         if new_password != confirm_password:
-            flash('New password and confirm password do not match.')
+            flash('New password and confirm password do not match.', 'error')
             return redirect(url_for('change_password'))
 
         try:
             with sqlite3.connect("dojo.db") as con:
                 cur = con.cursor()
                 cur.execute("SELECT password FROM users WHERE email = ?", (session['email'],))
-                user_password = cur.fetchone()[0]
+                user_password = cur.fetchone()
 
-                if bcrypt.check_password_hash(user_password, current_password):
+                if user_password and bcrypt.check_password_hash(user_password[0], current_password):
                     hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-                    cur.execute("UPDATE users SET password = ? WHERE email = ?", (hashed_password, session['email']))
+                    # Update the password and the last password change timestamp
+                    cur.execute("UPDATE users SET password = ?, last_password_change = ? WHERE email = ?", 
+                                (hashed_password, datetime.datetime.now(), session['email']))
                     con.commit()
-                    flash('Password changed successfully.')
+                    flash('Password changed successfully.', 'success')
                     return redirect(url_for('account'))
                 else:
-                    flash('Current password is incorrect.')
-                    return redirect(url_for('change_password'))
+                    flash('Current password is incorrect.', 'error')
         except sqlite3.Error as e:
-            print(f"Database error: {e}")
-            return redirect(url_for('account'))
+            flash(f"Database error: {e}")
 
-    return render_template('change_password.html', title="Change Password")
+    return render_template('change_password.html')
+
+@app.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
+    email = session['email']
+    
+    if request.method == 'POST':
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        phone_number = request.form.get('phone_number')
+        address = request.form.get('address')
+
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("""
+                    UPDATE users 
+                    SET firstName = ?, lastName = ?, phoneNumber = ?, address = ?, last_profile_update = ? 
+                    WHERE email = ?
+                """, (first_name, last_name, phone_number, address, datetime.datetime.now(), email))
+                con.commit()
+                flash('Profile updated successfully.', 'success')
+                return redirect(url_for('account'))
+        except sqlite3.Error as e:
+            flash(f"Database error: {e}")
+
+    # Fetch current user data to pre-fill the form
+    with sqlite3.connect("dojo.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT firstName, lastName, phoneNumber, address, last_login, last_password_change, last_profile_update FROM users WHERE email = ?", (email,))
+        user_data = cur.fetchone()
+        cur.close()
+
+    return render_template('edit_profile.html', user_data=user_data)
 
 @app.route('/cancel-booking', methods=['POST'])
 def cancel_booking():
@@ -290,16 +328,20 @@ def account():
 
     with sqlite3.connect("dojo.db") as con:
         cur = con.cursor()
-        cur.execute("SELECT firstName, lastName, phoneNumber, address, role FROM users WHERE email = ?", (email,))
+        cur.execute("SELECT firstName, lastName, phoneNumber, address, role, last_login, last_profile_update, last_password_change FROM users WHERE email = ?", (email,))
         data = cur.fetchone()
 
     if data:
+        print(data[5], type(data[5]))
         user_data = {
             'firstName': data[0],
             'lastName': data[1],
             'phoneNumber': data[2],
             'address': data[3],
-            'role': data[4]
+            'role': data[4],
+            'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%H:%M"),
+            'last_profile_update': datetime.datetime.strptime(data[6], "%Y-%m-%d %H:%M:%S.%f").strftime("%H:%M") if data[6] else None,
+            'last_password_change': datetime.datetime.strptime(data[7], "%Y-%m-%d %H:%M:%S.%f").strftime("%H:%M") if data[7] else None
         }
         return render_template('account.html', title="Account", email=email, user_data=user_data)
     else:

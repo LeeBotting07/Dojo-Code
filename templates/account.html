@@ -1,5 +1,15 @@
 {% extends "main.html" %}
 {% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
     <div class="account-container">
         <h2>My Account</h2>
         <div class="account-info">
@@ -14,19 +24,16 @@
         
         <div class="account-actions">
             <h3>Account Actions</h3>
-            <a href="#" class="btn btn-primary">Edit Profile</a>
+            <a href="{{ url_for('edit_profile') }}" class="btn btn-primary">Edit Profile</a>            
             <a href="{{ url_for('change_password')}}" class="btn btn-primary">Change Password</a>
             <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
         </div>
         
-        <div class="account-activities">
-            <h3>Recent Activities</h3>
-            <!-- Example recent activities, replace with actual data -->
-            <ul>
-                <li>Logged in - Date: 2023-01-01</li>
-                <li>Updated profile - Date: 2023-02-01</li>
-                <li>Changed password - Date: 2023-03-01</li>
-            </ul>
-        </div>
+        <h3>Recent Activities</h3>
+        <ul>
+            <li><strong>Last Logged In:</strong> {{ user_data.last_login }}</li>
+            <li><strong>Last Profile Updated:</strong> {{ user_data.last_profile_update }}</li>
+            <li><strong>Last Password Changed:</strong> {{ user_data.last_password_change }}</li>
+        </ul>
     </div>
 {% endblock %}
