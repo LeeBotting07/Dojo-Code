@@ -339,9 +339,9 @@ def account():
             'phoneNumber': data[2],
             'address': data[3],
             'role': data[4],
-            'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%H:%M"),
-            'last_profile_update': datetime.datetime.strptime(data[6], "%Y-%m-%d %H:%M:%S.%f").strftime("%H:%M") if data[6] else None,
-            'last_password_change': datetime.datetime.strptime(data[7], "%Y-%m-%d %H:%M:%S.%f").strftime("%H:%M") if data[7] else None
+            'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M"),
+            'last_profile_update': datetime.datetime.strptime(data[6], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[6] else None,
+            'last_password_change': datetime.datetime.strptime(data[7], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[7] else None
         }
         return render_template('account.html', title="Account", email=email, user_data=user_data)
     else:
