@@ -1,0 +1,34 @@
+{% extends "main.html" %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<h2>Add Card Information</h2>
+<form action="{{ url_for('add_card_info', user_id=user_id) }}" method="POST">
+    <div class="form-group">
+        <label for="card_number">Card Number</label>
+        <input type="text" id="card_number" name="card_number" required placeholder="Enter your card number">
+    </div>
+    <div class="form-group">
+        <label for="card_name">Card Name</label>
+        <input type="text" id="card_name" name="card_name" required placeholder="Enter the name on the card">
+    </div>
+    <div class="form-group">
+        <label for="expiry_date">Expiry Date (MM/YY)</label>
+        <input type="text" id="expiry_date" name="expiry_date" required placeholder="MM/YY">
+    </div>
+    <div class="form-group">
+        <label for="cvv">CVV</label>
+        <input type="text" id="cvv" name="cvv" required placeholder="Enter CVV">
+    </div>
+    <button type="submit" class="btn btn-primary">Save Card Information</button>
+</form>
+{% endblock %}

@@ -6,6 +6,16 @@ ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user';
 
 
 
+CREATE TABLE card_info (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    card_number TEXT NOT NULL,
+    card_name TEXT NOT NULL,
+    expiry_date TEXT NOT NULL,
+    cvv TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(userID)
+);
+
 CREATE TABLE contact_messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,

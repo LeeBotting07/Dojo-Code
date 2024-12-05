@@ -283,11 +283,33 @@ def register():
                 cur = con.cursor()
                 cur.execute("INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (username, email, hashed_password, firstname, lastname, phone, address, current_time))
                 con.commit()
-                session['email'] = email
-                return redirect(url_for('account'))
+                user_id = cur.lastrowid  # Get the ID of the newly created user
+
+                # Redirect to card information page
+                return redirect(url_for('add_card_info', user_id=user_id))
         except sqlite3.Error as e:
             error = f"Database error: {e}"
     return render_template('register.html', title="Register", error=error)
+
+@app.route('/add-card-info/<int:user_id>', methods=['GET', 'POST'])
+def add_card_info(user_id):
+    if request.method == 'POST':
+        card_number = request.form.get('card_number')
+        card_name = request.form.get('card_name')
+        expiry_date = request.form.get('expiry_date')
+        cvv = request.form.get('cvv')
+
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO card_info (user_id, card_number, card_name, expiry_date, cvv) VALUES (?, ?, ?, ?, ?)", (user_id, card_number, card_name, expiry_date, cvv))
+                con.commit()
+                flash('Card information saved successfully!', 'success')
+                return redirect(url_for('account'))  # Redirect to account page
+        except sqlite3.Error as e:
+            flash(f"Database error: {e}", 'error')
+
+    return render_template('add_card_info.html', user_id=user_id)
 
 @app.route('/admin-register', methods=['GET', 'POST'])
 def admin_register():
@@ -342,27 +364,56 @@ def account():
     email = session['email']
     print(f"Fetching account data for {email}.")  # Debug statement
 
-    with sqlite3.connect("dojo.db") as con:
-        cur = con.cursor()
-        cur.execute("SELECT firstName, lastName, phoneNumber, address, role, last_login, last_profile_update, last_password_change FROM users WHERE email = ?", (email,))
-        data = cur.fetchone()
+    try:
+        with sqlite3.connect("dojo.db") as con:
+            cur = con.cursor()
+            cur.execute("SELECT firstName, lastName, phoneNumber, address, role, last_login, last_profile_update, last_password_change FROM users WHERE email = ?", (email,))
+            data = cur.fetchone()
 
-    if data:
-        print(data[5], type(data[5]))
-        user_data = {
-            'firstName': data[0],
-            'lastName': data[1],
-            'phoneNumber': data[2],
-            'address': data[3],
-            'role': data[4],
-            'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[5] else None,
-            'last_profile_update': datetime.datetime.strptime(data[6], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[6] else None,
-            'last_password_change': datetime.datetime.strptime(data[7], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[7] else None
-        }
-        return render_template('account.html', title="Account", email=email, user_data=user_data)
-    else:
-        print("User  data not found, redirecting to home.")  # Debug statement
-        return redirect(url_for('home'))  # Redirect to home if user data is not found
+            if data:
+                user_id = data[0]  # Assuming the first column is user ID
+                user_data = {
+                    'firstName': data[0],
+                    'lastName': data[1],
+                    'phoneNumber': data[2],
+                    'address': data[3],
+                    'role': data[4],
+                    'last_login': datetime.datetime.strptime(data[5], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[5] else None,
+                    'last_profile_update': datetime.datetime.strptime(data[6], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[6] else None,
+                    'last_password_change': datetime.datetime.strptime(data[7], "%Y-%m-%d %H:%M:%S.%f").strftime("%Y-%m-%d %H:%M") if data[7] else None
+                }
+
+                # Fetch card information
+                cur.execute("SELECT card_number, card_name, expiry_date, cvv FROM card_info WHERE user_id = ?", (user_id,))
+                card_info = cur.fetchone()
+
+                return render_template('account.html', title="Account", email=email, user_data=user_data, card_info=card_info)
+            else:
+                print("User  data not found, redirecting to home.")  # Debug statement
+                return redirect(url_for('home'))  # Redirect to home if user data is not found
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")  # Debug statement
+        return redirect(url_for('home'))  # Redirect to home on error
+    
+@app.route('/add-card-info/<int:user_id>', methods=['GET', 'POST'])
+def add_card_info(user_id):
+    if request.method == 'POST':
+        card_number = request.form.get('card_number')
+        card_name = request.form.get('card_name')
+        expiry_date = request.form.get('expiry_date')
+        cvv = request.form.get('cvv')
+
+        try:
+            with sqlite3.connect("dojo.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO card_info (user_id, card_number, card_name, expiry_date, cvv) VALUES (?, ?, ?, ?, ?)", (user_id, card_number, card_name, expiry_date, cvv))
+                con.commit()
+                flash('Card information saved successfully!', 'success')
+                return redirect(url_for('account'))  # Redirect to account page
+        except sqlite3.Error as e:
+            flash(f"Database error: {e}", 'error')
+
+    return render_template('add_card_info.html', user_id=user_id)
     
 @app.route('/events', methods=['GET', 'POST'])
 def events():
