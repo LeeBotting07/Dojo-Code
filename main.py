@@ -294,22 +294,32 @@ def register():
 @app.route('/add-card-info/<int:user_id>', methods=['GET', 'POST'])
 def add_card_info(user_id):
     if request.method == 'POST':
+        # Get the card details from the form
         card_number = request.form.get('card_number')
         card_name = request.form.get('card_name')
         expiry_date = request.form.get('expiry_date')
         cvv = request.form.get('cvv')
 
+        # Validate the data (optional, but good practice)
+        if not card_number or not card_name or not expiry_date or not cvv:
+            flash('All fields are required!', 'error')
+            return redirect(url_for('add_card_info', user_id=user_id))  # Redirect to the same form if validation fails
+
         try:
             with sqlite3.connect("dojo.db") as con:
                 cur = con.cursor()
-                cur.execute("INSERT INTO card_info (user_id, card_number, card_name, expiry_date, cvv) VALUES (?, ?, ?, ?, ?)", (user_id, card_number, card_name, expiry_date, cvv))
+                # Insert the card information into the database
+                cur.execute("INSERT INTO card_info (user_id, card_number, card_name, expiry_date, cvv) VALUES (?, ?, ?, ?, ?)", 
+                            (user_id, card_number, card_name, expiry_date, cvv))
                 con.commit()
                 flash('Card information saved successfully!', 'success')
-                return redirect(url_for('account'))  # Redirect to account page
+                return redirect(url_for('account'))  # Redirect to account page after saving
         except sqlite3.Error as e:
             flash(f"Database error: {e}", 'error')
+            return redirect(url_for('add_card_info', user_id=user_id))  # Stay on the form if an error occurs
 
     return render_template('add_card_info.html', user_id=user_id)
+
 
 @app.route('/admin-register', methods=['GET', 'POST'])
 def admin_register():
@@ -363,6 +373,7 @@ def account():
     
     email = session['email']
     print(f"Fetching account data for {email}.")  # Debug statement
+    card_info = None
 
     try:
         with sqlite3.connect("dojo.db") as con:
@@ -394,26 +405,6 @@ def account():
     except sqlite3.Error as e:
         print(f"Database error: {e}")  # Debug statement
         return redirect(url_for('home'))  # Redirect to home on error
-    
-@app.route('/add-card-info/<int:user_id>', methods=['GET', 'POST'])
-def add_card_info(user_id):
-    if request.method == 'POST':
-        card_number = request.form.get('card_number')
-        card_name = request.form.get('card_name')
-        expiry_date = request.form.get('expiry_date')
-        cvv = request.form.get('cvv')
-
-        try:
-            with sqlite3.connect("dojo.db") as con:
-                cur = con.cursor()
-                cur.execute("INSERT INTO card_info (user_id, card_number, card_name, expiry_date, cvv) VALUES (?, ?, ?, ?, ?)", (user_id, card_number, card_name, expiry_date, cvv))
-                con.commit()
-                flash('Card information saved successfully!', 'success')
-                return redirect(url_for('account'))  # Redirect to account page
-        except sqlite3.Error as e:
-            flash(f"Database error: {e}", 'error')
-
-    return render_template('add_card_info.html', user_id=user_id)
     
 @app.route('/events', methods=['GET', 'POST'])
 def events():
