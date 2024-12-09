@@ -34,7 +34,8 @@
                 {% else %}
                     <p>No card information available. Please add your card details.</p>
                 {% endif %}
-                <button class="btn btn-primary" id="fill-card-info" onclick="window.location.href='{{ url_for('add_card_info', user_id=user_data.user_id) }}'">Fill Card Information</button>            </div>                       
+
+                <button class="btn btn-primary" id="fill-card-info" onclick=window.location.href="{{ url_for('add_card_info') }}">Fill Card Information</button>                
         </div>
 
         <div class="account-actions">

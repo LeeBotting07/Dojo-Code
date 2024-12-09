@@ -291,8 +291,14 @@ def register():
             error = f"Database error: {e}"
     return render_template('register.html', title="Register", error=error)
 
-@app.route('/add-card-info/<int:user_id>', methods=['GET', 'POST'])
-def add_card_info(user_id):
+@app.route('/add-card-info', methods=['GET', 'POST'])
+def add_card_info():
+    email = session['email']
+    with sqlite3.connect("dojo.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT userID FROM users WHERE email = ?", (email,))
+        user_id = cur.fetchone()[0]
+
     if request.method == 'POST':
         # Get the card details from the form
         card_number = request.form.get('card_number')
