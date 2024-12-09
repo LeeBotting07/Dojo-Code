@@ -29,6 +29,7 @@ fastjsonschema==2.20.0
 Flask==3.0.3
 Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
+flask_bcrypt==0.7.1
 fonttools==4.53.1
 fqdn==1.5.1
 greenlet==3.1.1
